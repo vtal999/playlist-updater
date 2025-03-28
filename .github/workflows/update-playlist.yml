@@ -16,17 +16,17 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3  # Обновленная версия
         with:
-          python-version: '3.x'  # Указываем версию Python (например, 3.8)
+          python-version: '3.9'  # Указываем точную версию Python
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4
+          pip install requests beautifulsoup4 selenium webdriver-manager  # Установка дополнительных библиотек, если нужно
 
       - name: Configure Git user
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "you@example.com"  # Укажите свой email
+          git config --global user.name "Your Name"  # Укажите свое имя
 
       - name: Update playlist with new token
         run: |
@@ -40,12 +40,13 @@ jobs:
       - name: Force add the playlist file
         run: |
           git add -f playlist.m3u  # Принудительное добавление файла
-          git commit -m "Update playlist with new token" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git
+          git commit -m "Update playlist with new token" || echo "No changes to commit"  # Если изменений нет, пропускаем
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для аутентификации
 
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
+
 
 
 
