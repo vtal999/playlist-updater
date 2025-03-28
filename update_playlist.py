@@ -2,6 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import base64
+import sys  # Добавим импорт для работы с аргументами
+
+# Получаем GITHUB_TOKEN из аргумента командной строки
+github_token = sys.argv[1]  # Токен передается как первый аргумент
 
 # URL канала, с которого нужно извлечь токен
 channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
@@ -58,10 +62,7 @@ if source_tag:
         file_path = "playlist.m3u"
         branch = "main"
         
-        # Получаем токен GITHUB_TOKEN из переменной окружения
-        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
-        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
-
+        # Заголовки для аутентификации через GitHub API
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
