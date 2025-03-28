@@ -59,8 +59,8 @@ if source_tag:
         file_path = "playlist.m3u"
         branch = "main"
         
-        # Получаем токен GITHUB_TOKEN из переменной окружения
-        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
+        # Получаем токен GITHUB_TOKEN из переменной окружения (он уже передан через Actions)
+        github_token = os.environ.get("GITHUB_TOKEN")
         if not github_token:
             raise ValueError("GITHUB_TOKEN is missing. Please provide a valid token.")
         
@@ -99,6 +99,7 @@ if source_tag:
 
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
