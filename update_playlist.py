@@ -55,7 +55,7 @@ try:
         branch = "main"
         
         # Получаем токен GITHUB_TOKEN из переменной окружения
-        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
+        github_token = os.getenv("GITHUB_TOKEN")  # Это токен автоматически доступен в GitHub Actions
         if not github_token:
             print("Ошибка: GITHUB_TOKEN не передан в окружение")
             driver.quit()
