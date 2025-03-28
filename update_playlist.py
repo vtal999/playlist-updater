@@ -47,7 +47,7 @@ if source_tag:
         
         # Получаем токен GITHUB_TOKEN из переменной окружения
         github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
-        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
+        print(f"GITHUB_TOKEN: {github_token}")  # Для отладки
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
@@ -85,6 +85,7 @@ if source_tag:
 
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
