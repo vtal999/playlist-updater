@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import subprocess
+import base64
 
 # URL канала, с которого нужно извлечь токен
 channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
@@ -19,11 +20,12 @@ soup = BeautifulSoup(response.text, 'html.parser')
 # Найдем ссылку с токеном в теге <source>
 source_tag = soup.find('source')
 if source_tag:
+    # Извлекаем ссылку из атрибута 'src' тега <source>
     video_src = source_tag.get('src')
     if video_src:
         print(f"Video source URL: {video_src}")
 
-        # Извлекаем токен
+        # Извлекаем токен из ссылки
         start_index = video_src.find('token=') + len('token=')
         end_index = video_src.find('&', start_index)
         if end_index == -1:
@@ -32,47 +34,63 @@ if source_tag:
         
         print(f"Extracted token: {extracted_token}")
 
-        # Формируем новый URL
-        new_token_url = video_src.split('?')[0] + f"?token={extracted_token}"
+        # Формируем новый URL с актуальным токеном
+        new_token_url = video_src.split('?')[0]
+        new_token_url += f"?token={extracted_token}"
+
         print(f"New token URL: {new_token_url}")
 
-        # Записываем в файл
+        # Путь к плейлисту
         playlist_path = 'playlist.m3u'
         print(f"Updating playlist at: {playlist_path}")
 
+        # Открываем плейлист и обновляем ссылку
         with open(playlist_path, 'w') as file:
             file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n")
 
-        # Проверяем, что файл реально обновился
+        # Выводим содержимое файла для проверки
         with open(playlist_path, 'r') as file:
-            print("=== CURRENT PLAYLIST CONTENT ===")
-            print(file.read())
-            print("================================")
+            playlist_content = file.read()
+            print("ФИНАЛЬНОЕ СОДЕРЖИМОЕ playlist.m3u:\n" + playlist_content)
 
-        # Добавляем настройки Git перед коммитом
-        subprocess.run(['git', 'config', '--global', 'user.email', 'you@example.com'], check=True)
-        subprocess.run(['git', 'config', '--global', 'user.name', 'Your Name'], check=True)
+        # Сброс кэша Git, чтобы он видел изменения
+        subprocess.run(['git', 'update-index', '--assume-unchanged', playlist_path])
+        subprocess.run(['git', 'update-index', '--no-assume-unchanged', playlist_path])
 
-        # Проверяем статус Git перед коммитом
-        subprocess.run(['git', 'status'], check=True)
+        # === Обновление файла через GitHub API ===
+        repo_owner = "vtal999"
+        repo_name = "playlist-updater"
+        file_path = "playlist.m3u"
+        branch = "main"
+        github_token = os.getenv("GITHUB_TOKEN")
 
-        # Принудительно добавляем файл
-        subprocess.run(['git', 'add', '-f', playlist_path], check=True)
+        headers = {"Authorization": f"token {github_token}"}
+        url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
+        response = requests.get(url, headers=headers)
+        file_data = response.json()
+        sha = file_data.get("sha", "")
 
-        # Проверяем статус снова
-        subprocess.run(['git', 'status'], check=True)
+        encoded_content = base64.b64encode(playlist_content.encode()).decode()
 
-        # Делаем коммит и пуш
-        try:
-            subprocess.run(['git', 'commit', '-m', 'Update playlist with new token'], check=True)
-            subprocess.run(['git', 'push'], check=True)
-            print("Changes pushed to the repository.")
-        except subprocess.CalledProcessError as e:
-            print(f"Error during git commit/push: {e}")
+        data = {
+            "message": "Update playlist with new token",
+            "content": encoded_content,
+            "sha": sha,
+            "branch": branch
+        }
+
+        response = requests.put(url, headers=headers, json=data)
+
+        if response.status_code in [200, 201]:
+            print("Файл успешно обновлен через GitHub API.")
+        else:
+            print("Ошибка при обновлении через API:", response.text)
+
     else:
         print("Не удалось найти атрибут 'src' в теге <source>")
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
