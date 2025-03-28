@@ -1,10 +1,10 @@
-import requests
+import requests 
 from bs4 import BeautifulSoup
 import os
 import base64
 
-# URL публичного плейлиста
-playlist_url = "https://github.com/vtal999/playlist-public/blob/main/playlist.m3u"
+# URL канала, с которого нужно извлечь токен
+channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
 
 # Заголовки для обхода кэширования (если необходимо)
 headers = {
@@ -12,8 +12,8 @@ headers = {
     'Pragma': 'no-cache',
 }
 
-# Получаем страницу с плейлистом
-response = requests.get(playlist_url, headers=headers)
+# Получаем страницу канала
+response = requests.get(channel_url, headers=headers)
 soup = BeautifulSoup(response.text, 'html.parser')
 
 # Найдем ссылку с токеном в теге <source>
@@ -63,8 +63,7 @@ if source_tag:
         github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
         if not github_token:
             raise ValueError("GITHUB_TOKEN is missing. Please provide a valid token.")
-        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
-
+        
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
@@ -100,19 +99,6 @@ if source_tag:
 
 else:
     print("Не удалось найти тег <source> на странице.")
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
