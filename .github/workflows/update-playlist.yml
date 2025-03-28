@@ -2,8 +2,8 @@ name: Update Playlist Token
 
 on:
   schedule:
-    - cron: "*/30 * * * *"  # запускается каждые 30 минут
-  workflow_dispatch:  # позволяет запускать вручную
+    - cron: "*/30 * * * *"  # Запускается каждые 30 минут
+  workflow_dispatch:  # Позволяет запускать вручную
 
 jobs:
   update-playlist:
@@ -42,7 +42,8 @@ jobs:
           git commit -m "Update playlist with new token"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}  # Используем ваш секретный токен
+
 
 
 
