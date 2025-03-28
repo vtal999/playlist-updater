@@ -30,18 +30,20 @@ jobs:
 
       - name: Update playlist with new token
         run: |
-          python3 update_playlist.py ${{ secrets.GITHUB_TOKEN }}  # Передаем токен в скрипт
+          echo "MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}"  # Проверим доступность токена
+          python3 update_playlist.py  # Запуск вашего скрипта
+
+      - name: Check for changes before pushing
+        run: |
+          git diff  # Проверяем изменения
+
+      - name: Force add the playlist file
+        run: |
+          git add -f playlist.m3u  # Принудительное добавление файла
+          git commit -m "Update playlist with new token" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git
 
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
-
-      - name: Force add the playlist file
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для аутентификации
-          git fetch origin
-          git reset --hard origin/main
-          git add -f playlist.m3u  # Принудительное добавление файла
-          git commit -m "Update playlist with new token"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для выполнения push
 
