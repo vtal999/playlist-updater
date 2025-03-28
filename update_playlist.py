@@ -58,7 +58,7 @@ if source_tag:
         repo_name = "playlist-updater"
         file_path = "playlist.m3u"
         branch = "main"
-        github_token = os.getenv("GITHUB_TOKEN")  # Получаем токен из переменной окружения
+        github_token = os.getenv("GITHUB_TOKEN")  # Получаем токен из стандартной переменной окружения GitHub Actions
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
@@ -92,8 +92,10 @@ if source_tag:
 
     else:
         print("Не удалось найти атрибут 'src' в теге <source>")
+
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
