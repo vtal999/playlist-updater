@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import os
-import subprocess
 import base64
 
 # URL канала, с которого нужно извлечь токен
@@ -98,6 +97,7 @@ if source_tag:
 
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
