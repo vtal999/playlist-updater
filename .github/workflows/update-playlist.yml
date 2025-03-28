@@ -32,7 +32,7 @@ jobs:
         run: |
           python3 update_playlist.py
         env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Используем персональный токен доступа
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Стандартный токен GitHub Actions
 
       - name: Check for changes before pushing
         run: |
@@ -42,10 +42,11 @@ jobs:
         run: |
           git add -f playlist.m3u
           git commit -m "Update playlist with new token" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/vtal999/playlist-public.git
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-public.git
 
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u
+
 
 
