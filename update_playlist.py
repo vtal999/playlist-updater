@@ -53,10 +53,14 @@ if source_tag:
         # Выводим информацию о том, что плейлист обновлен
         print(f"New playlist URL written to file: {new_token_url}")
         
+        # Добавляем настройки Git перед коммитом
+        subprocess.run(['git', 'config', '--global', 'user.email', 'you@example.com'], check=True)
+        subprocess.run(['git', 'config', '--global', 'user.name', 'Your Name'], check=True)
+
         # Добавляем изменения в git и выполняем коммит
         try:
             subprocess.run(['git', 'add', playlist_path], check=True)
-            subprocess.run(['git', 'commit', '-m', '"Update playlist with new token"'], check=True)
+            subprocess.run(['git', 'commit', '-m', 'Update playlist with new token'], check=True)
             subprocess.run(['git', 'push'], check=True)
             print("Changes pushed to the repository.")
         except subprocess.CalledProcessError as e:
@@ -65,6 +69,7 @@ if source_tag:
         print("Не удалось найти атрибут 'src' в теге <source>")
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
