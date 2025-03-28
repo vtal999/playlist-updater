@@ -46,11 +46,3 @@ jobs:
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
-
-
-      - name: Check playlist file contents before and after
-        run: |
-          cat playlist.m3u  # Печать содержимого файла для проверки
-
-
-
