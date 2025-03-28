@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Обновленная версия
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3  # Обновленная версия
         with:
           python-version: '3.x'  # Указываем версию Python (например, 3.8)
 
@@ -38,14 +38,14 @@ jobs:
 
       - name: Force add the playlist file
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.MY_PERSONAL_TOKEN }}@github.com/vtal999/playlist-updater.git  # Обновляем URL с токеном
+          git remote set-url origin https://x-access-token:${{ secrets.MY_PERSONAL_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем MY_PERSONAL_TOKEN
           git fetch origin
           git reset --hard origin/main
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token"
           git push origin main
         env:
-          MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}  # Убедитесь, что используете ваш токен в секретах
+          MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}  # Используем MY_PERSONAL_TOKEN
 
 
 
