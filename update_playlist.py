@@ -22,10 +22,10 @@ if video_tag:
     # Извлекаем ссылку из атрибута 'src' тега <video>
     video_src = video_tag.get('src')
     if video_src:
-        print(f"Video source URL: {video_src}")
+        print(f"Video URL: {video_src}")
 
         # Формируем новый URL
-        new_url = video_src.split('?')[0]
+        new_url = video_src
 
         print(f"New URL: {new_url}")
 
