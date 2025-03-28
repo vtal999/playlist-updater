@@ -14,11 +14,11 @@ headers = {
 response = requests.get(channel_url, headers=headers)
 soup = BeautifulSoup(response.text, 'html.parser')
 
-# Найдем ссылку с токеном в исходном коде страницы
-video_tag = soup.find('video')
-if video_tag:
-    # Используем get() чтобы избежать ошибки если атрибут 'src' не существует
-    video_src = video_tag.get('src')
+# Найдем ссылку с токеном в теге <source>
+source_tag = soup.find('source')
+if source_tag:
+    # Извлекаем ссылку из атрибута 'src' тега <source>
+    video_src = source_tag.get('src')
     if video_src:
         # Выводим исходную ссылку с токеном для отладки
         print(f"Video source URL: {video_src}")
@@ -47,9 +47,9 @@ if video_tag:
         # Выводим информацию о том, что плейлист обновлен
         print(f"New playlist URL written: {new_token_url}")
     else:
-        print("Не удалось найти атрибут 'src' в теге <video>")
+        print("Не удалось найти атрибут 'src' в теге <source>")
 else:
-    print("Не удалось найти тег <video> на странице.")
+    print("Не удалось найти тег <source> на странице.")
 
 
 
