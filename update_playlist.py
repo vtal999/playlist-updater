@@ -1,4 +1,4 @@
-import requests 
+import requests
 from bs4 import BeautifulSoup
 import os
 import base64
@@ -55,15 +55,14 @@ if source_tag:
 
         # === Обновление файла через GitHub API ===
         repo_owner = "vtal999"
-        repo_name = "playlist-public"
+        repo_name = "playlist-updater"
         file_path = "playlist.m3u"
         branch = "main"
         
-        # Получаем токен GITHUB_TOKEN из переменной окружения (он уже передан через Actions)
-        github_token = os.environ.get("GITHUB_TOKEN")
-        if not github_token:
-            raise ValueError("GITHUB_TOKEN is missing. Please provide a valid token.")
-        
+        # Получаем токен GITHUB_TOKEN из переменной окружения
+        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
+        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
+
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
