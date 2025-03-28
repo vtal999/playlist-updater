@@ -31,17 +31,18 @@ jobs:
       - name: Update playlist with new token
         run: |
           python3 update_playlist.py  # Запуск вашего скрипта
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Обеспечиваем правильный токен
 
-      - name: Push changes
+      - name: Check playlist file contents before and after
         run: |
-          git add playlist.m3u
+          cat playlist.m3u  # Печать содержимого файла для проверки
+
+      - name: Force add the playlist file
+        run: |
+          git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Используем правильный токен для пуша
-
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
 
 
