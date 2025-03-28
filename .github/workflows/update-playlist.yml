@@ -46,9 +46,6 @@ jobs:
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token"
           git push origin main
-        env:
-          MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}  # Используем MY_PERSONAL_TOKEN
-
 
 
 
