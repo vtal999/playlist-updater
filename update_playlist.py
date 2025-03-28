@@ -39,24 +39,10 @@ if source_tag:
 
         print(f"New token URL: {new_token_url}")
 
-        # Путь к плейлисту (публичный репозиторий)
-        playlist_path = 'playlist.m3u'
-        print(f"Updating playlist at: {playlist_path}")
-
-        # Открываем плейлист и обновляем ссылку
-        with open(playlist_path, 'w') as file:
-            file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n")
-
-        # Выводим содержимое файла для проверки
-        with open(playlist_path, 'r') as file:
-            playlist_content = file.read()
-            print("Содержимое файла playlist.m3u после обновления:")
-            print(playlist_content)
-
         # === Обновление файла через GitHub API ===
         repo_owner = "vtal999"
         repo_name = "playlist-public"  # Публичный репозиторий
-        file_path = "playlist.m3u"
+        file_path = "playlist.m3u"  # Путь к файлу на GitHub
         branch = "main"
         
         # Получаем токен GITHUB_TOKEN из переменной окружения
@@ -76,6 +62,7 @@ if source_tag:
             sha = ""
 
         # Кодируем содержимое плейлиста в base64
+        playlist_content = f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n"
         encoded_content = base64.b64encode(playlist_content.encode()).decode()
 
         data = {
@@ -98,6 +85,8 @@ if source_tag:
 
 else:
     print("Не удалось найти тег <source> на странице.")
+
+
 
 
 
