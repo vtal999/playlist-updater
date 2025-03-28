@@ -45,4 +45,3 @@ jobs:
           git commit -m "Update playlist with new token"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для выполнения push
 
-
