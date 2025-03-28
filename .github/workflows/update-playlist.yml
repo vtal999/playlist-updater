@@ -45,7 +45,8 @@ jobs:
           git reset --hard origin/main
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token"
-          git push origin main
+          git push https://x-access-token:${{ secrets.MY_PERSONAL_TOKEN }}@github.com/vtal999/playlist-updater.git  # Добавили токен в команду git push
+
 
 
 
