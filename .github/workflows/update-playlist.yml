@@ -1,0 +1,20 @@
+name: Update Playlist Token
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # запускается каждые 30 минут
+  workflow_dispatch:  # позволяет запускать вручную
+
+jobs:
+  update-playlist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update playlist with new token
+        run: |
+          python3 update_playlist.py  # Здесь будет вызов нашего скрипта, который мы создадим
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
