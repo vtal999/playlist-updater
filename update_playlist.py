@@ -53,23 +53,26 @@ if source_tag:
             playlist_content = file.read()
             print("ФИНАЛЬНОЕ СОДЕРЖИМОЕ playlist.m3u:\n" + playlist_content)
 
-        # Сброс кэша Git, чтобы он видел изменения
-        subprocess.run(['git', 'update-index', '--assume-unchanged', playlist_path])
-        subprocess.run(['git', 'update-index', '--no-assume-unchanged', playlist_path])
-
         # === Обновление файла через GitHub API ===
         repo_owner = "vtal999"
         repo_name = "playlist-updater"
         file_path = "playlist.m3u"
         branch = "main"
-        github_token = os.getenv("GITHUB_TOKEN")
+        github_token = os.getenv("GITHUB_TOKEN")  # Получаем токен из переменной окружения
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
-        response = requests.get(url, headers=headers)
-        file_data = response.json()
-        sha = file_data.get("sha", "")
 
+        # Получаем информацию о текущем файле, чтобы обновить его
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            file_data = response.json()
+            sha = file_data.get("sha", "")
+        else:
+            print(f"Ошибка при получении информации о файле: {response.text}")
+            sha = ""
+
+        # Кодируем содержимое плейлиста в base64
         encoded_content = base64.b64encode(playlist_content.encode()).decode()
 
         data = {
@@ -79,6 +82,7 @@ if source_tag:
             "branch": branch
         }
 
+        # Отправляем запрос для обновления файла
         response = requests.put(url, headers=headers, json=data)
 
         if response.status_code in [200, 201]:
