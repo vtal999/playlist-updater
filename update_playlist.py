@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import os
 
 # URL канала, с которого нужно извлечь токен
 channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
@@ -15,46 +14,46 @@ headers = {
 response = requests.get(channel_url, headers=headers)
 soup = BeautifulSoup(response.text, 'html.parser')
 
-# Найдем ссылку с токеном в исходном коде страницы
-video_tag = soup.find('video')
-if video_tag:
-    # Используем get() чтобы избежать ошибки если атрибут 'src' не существует
-    video_src = video_tag.get('src')
+# Найдем ссылку с токеном в теге <source>
+source_tag = soup.find('source')
+if source_tag:
+    # Извлекаем ссылку из атрибута 'src' тега <source>
+    video_src = source_tag.get('src')
     if video_src:
-        # Извлекаем токен из URL
+        # Выводим исходную ссылку с токеном для отладки
         print(f"Video source URL: {video_src}")
+
+        # Извлекаем токен из ссылки
+        start_index = video_src.find('token=') + len('token=')
+        end_index = video_src.find('&', start_index)
+        if end_index == -1:
+            end_index = len(video_src)
+        extracted_token = video_src[start_index:end_index]
         
-        # Пример извлечения токена из URL
-        token_start = video_src.find("token=") + len("token=")
-        token_end = video_src.find("&", token_start)
-        token = video_src[token_start:token_end if token_end != -1 else None]
-        
-        print(f"Extracted token: {token}")
+        # Выводим токен для проверки
+        print(f"Extracted token: {extracted_token}")
 
-        # Собираем новый URL с токеном
-        new_token_url = video_src.split('?')[0] + f"?token={token}"
-        
-        # Обновляем содержимое файла в репозитории
-        file_path = 'playlist.m3u'  # Путь к вашему плейлисту в репозитории
+        # Формируем новый URL с актуальным токеном
+        new_token_url = video_src.split('?')[0]  # Убираем старый токен и оставляем базовую ссылку
+        new_token_url += f"?token={extracted_token}"  # Обновляем на новый токен
 
-        # Новый контент для плейлиста
-        new_playlist_content = f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n"
+        # Выводим новый URL для отладки
+        print(f"New token URL: {new_token_url}")
 
-        # Запись нового контента в файл
-        with open(file_path, 'w') as f:
-            f.write(new_playlist_content)
+        # Печатаем путь к файлу плейлиста для проверки
+        playlist_path = 'playlist.m3u'
+        print(f"Updating playlist at: {playlist_path}")
 
+        # Открываем плейлист и обновляем ссылку
+        with open(playlist_path, 'w') as file:
+            file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n")
+
+        # Выводим информацию о том, что плейлист обновлен
         print(f"New playlist URL written to file: {new_token_url}")
-
-        # Добавляем и коммитим изменения в репозиторий
-        os.system(f'git add {file_path}')
-        os.system(f'git commit -m "Update playlist with new token"')
-        os.system(f'git push')
-
     else:
-        print("Не удалось найти атрибут 'src' в теге <video>")
+        print("Не удалось найти атрибут 'src' в теге <source>")
 else:
-    print("Не удалось найти тег <video> на странице.")
+    print("Не удалось найти тег <source> на странице.")
 
 
 
