@@ -40,12 +40,16 @@ if source_tag:
         # Выводим новый URL для отладки
         print(f"New token URL: {new_token_url}")
 
+        # Печатаем путь к файлу плейлиста для проверки
+        playlist_path = 'playlist.m3u'
+        print(f"Updating playlist at: {playlist_path}")
+
         # Открываем плейлист и обновляем ссылку
-        with open('playlist.m3u', 'w') as file:
+        with open(playlist_path, 'w') as file:
             file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n")
 
         # Выводим информацию о том, что плейлист обновлен
-        print(f"New playlist URL written: {new_token_url}")
+        print(f"New playlist URL written to file: {new_token_url}")
     else:
         print("Не удалось найти атрибут 'src' в теге <source>")
 else:
