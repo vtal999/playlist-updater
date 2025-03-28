@@ -60,8 +60,8 @@ if source_tag:
         branch = "main"
         
         # Получаем токен GITHUB_TOKEN из переменной окружения
-        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
-        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
+        github_token = os.getenv("MY_PERSONAL_TOKEN")  # Используем MY_PERSONAL_TOKEN, передаваемый GitHub Actions
+        print(f"MY_PERSONAL_TOKEN: {github_token}")  # Добавлено для отладки
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
