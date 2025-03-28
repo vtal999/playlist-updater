@@ -13,8 +13,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Указываем версию Python (например, 3.8)
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
       - name: Update playlist with new token
         run: |
-          python3 update_playlist.py  # Здесь будет вызов нашего скрипта, который мы создадим
+          python3 update_playlist.py  # Запуск вашего скрипта
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
