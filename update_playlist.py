@@ -59,7 +59,7 @@ if source_tag:
         file_path = "playlist.m3u"
         branch = "main"
         
-        # Получаем токен GITHUB_TOKEN из переменной окружения
+        # Получаем токен MY_PERSONAL_TOKEN из переменной окружения
         github_token = os.getenv("MY_PERSONAL_TOKEN")  # Используем MY_PERSONAL_TOKEN, передаваемый GitHub Actions
         print(f"MY_PERSONAL_TOKEN: {github_token}")  # Добавлено для отладки
 
