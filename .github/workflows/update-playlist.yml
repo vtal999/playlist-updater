@@ -21,11 +21,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4
+          pip install requests beautifulsoup4 gitpython
 
       - name: Update playlist with new token
         run: |
           python3 update_playlist.py  # Запуск вашего скрипта
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
