@@ -60,13 +60,13 @@ if source_tag:
         branch = "main"
         
         # Получаем персональный токен из переменной окружения
-        github_token = os.getenv("MY_PERSONAL_TOKEN")  # Получаем токен из переменной окружения
-        if not github_token:
+        github_tokenn = os.getenv("MY_PERSONAL_TOKEN")  # Получаем токен из переменной окружения
+        if not github_tokenn:
             print("Ошибка: Токен не найден в переменной окружения!")
         else:
-            print(f"Используется токен: {github_token[:4]}...")  # Для отладки
+            print(f"Используется токен: {github_tokenn[:4]}...")  # Для отладки
 
-        headers = {"Authorization": f"token {github_token}"}
+        headers = {"Authorization": f"token {github_tokenn}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
         # Получаем информацию о текущем файле, чтобы обновить его
