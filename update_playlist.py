@@ -39,7 +39,7 @@ if source_tag:
 
         print(f"New token URL: {new_token_url}")
 
-        # Путь к плейлисту
+        # Путь к плейлисту (публичный репозиторий)
         playlist_path = 'playlist.m3u'
         print(f"Updating playlist at: {playlist_path}")
 
@@ -55,7 +55,7 @@ if source_tag:
 
         # === Обновление файла через GitHub API ===
         repo_owner = "vtal999"
-        repo_name = "playlist-updater"
+        repo_name = "playlist-public"  # Публичный репозиторий
         file_path = "playlist.m3u"
         branch = "main"
         
@@ -98,6 +98,7 @@ if source_tag:
 
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
