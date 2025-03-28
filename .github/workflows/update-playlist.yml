@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Обновленная версия
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v3  # Обновленная версия
         with:
           python-version: '3.x'  # Указываем версию Python (например, 3.8)
 
@@ -30,7 +30,7 @@ jobs:
 
       - name: Update playlist with new token
         run: |
-          echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"  # Проверим доступность токена
+          echo "MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}"  # Проверим доступность токена
           python3 update_playlist.py  # Запуск вашего скрипта
 
       - name: Check for changes before pushing
@@ -41,11 +41,10 @@ jobs:
         run: |
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token" || echo "No changes to commit"
-          git push https://github.com/vtal999/playlist-public.git
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git
 
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
-
 
 
