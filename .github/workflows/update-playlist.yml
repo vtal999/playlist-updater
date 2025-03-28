@@ -2,7 +2,7 @@ name: Update Playlist Token
 
 on:
   schedule:
-    - cron: "*/10 * * * *"  # Запускается каждые 30 минут
+    - cron: "*/30 * * * *"  # Запускается каждые 30 минут
   workflow_dispatch:  # Позволяет запускать вручную
 
 jobs:
@@ -41,10 +41,11 @@ jobs:
         run: |
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.MY_PERSONAL_TOKEN }}@github.com/vtal999/playlist-updater.git
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git
 
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
+
 
 
