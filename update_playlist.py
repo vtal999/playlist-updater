@@ -1,26 +1,31 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 import requests
-from bs4 import BeautifulSoup
 import os
 import base64
+
+# Настройка веб-драйвера
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
+
+# Запуск драйвера Chrome
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 # URL канала, с которого нужно извлечь токен
 channel_url = "http://ip.viks.tv/114427-22-tv.html"
 
-# Заголовки для обхода кэширования (если необходимо)
-headers = {
-    'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-}
+# Открываем страницу
+driver.get(channel_url)
 
-# Получаем страницу канала
-response = requests.get(channel_url, headers=headers)
-soup = BeautifulSoup(response.text, 'html.parser')
+# Ждем, пока тег <video> появится на странице
+driver.implicitly_wait(10)
 
-# Найдем ссылку в теге <video>
-video_tag = soup.find('video')  # Ищем тег <video>
+# Находим тег <video> и извлекаем атрибут 'src'
+video_tag = driver.find_element(By.TAG_NAME, 'video')
 if video_tag:
-    # Извлекаем ссылку из атрибута 'src' тега <video>
-    video_src = video_tag.get('src')
+    video_src = video_tag.get_attribute('src')
     if video_src:
         print(f"Video URL: {video_src}")
 
@@ -83,11 +88,12 @@ if video_tag:
         else:
             print("Ошибка при обновлении через API:", response.text)
 
-    else:
-        print("Не удалось найти атрибут 'src' в теге <source>")
-
 else:
-    print("Не удалось найти тег <source> на странице.")
+    print("Не удалось найти тег <video> на странице.")
+
+# Закрываем драйвер
+driver.quit()
+
 
 
 
