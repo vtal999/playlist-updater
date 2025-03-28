@@ -30,6 +30,7 @@ jobs:
 
       - name: Update playlist with new token
         run: |
+          echo "MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}"  # Проверим доступность токена
           python3 update_playlist.py  # Запуск вашего скрипта
 
       - name: Check playlist file contents before and after
@@ -38,6 +39,7 @@ jobs:
 
       - name: Force add the playlist file
         run: |
+          echo "MY_PERSONAL_TOKEN (after): ${{ secrets.MY_PERSONAL_TOKEN }}"  # Проверка перед использованием токена
           git remote set-url origin https://x-access-token:${{ secrets.MY_PERSONAL_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем MY_PERSONAL_TOKEN
           git fetch origin
           git reset --hard origin/main
@@ -46,8 +48,6 @@ jobs:
           git push origin main
         env:
           MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}  # Используем MY_PERSONAL_TOKEN
-
-
 
 
 
