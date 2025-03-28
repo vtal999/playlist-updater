@@ -17,7 +17,7 @@ response = requests.get(channel_url, headers=headers)
 soup = BeautifulSoup(response.text, 'html.parser')
 
 # Найдем ссылку в теге <video>
-video_tag = soup.find('video')
+video_tag = soup.find('video')  # Ищем тег <video>
 if video_tag:
     # Извлекаем ссылку из атрибута 'src' тега <video>
     video_src = video_tag.get('src')
