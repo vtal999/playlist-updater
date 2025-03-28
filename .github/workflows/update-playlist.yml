@@ -45,7 +45,7 @@ jobs:
           git commit -m "Update playlist with new token"
           git push origin main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Используем ваш токен
+          GITHUB_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}  # Используем ваш токен
 
 
 
