@@ -2,10 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import base64
-import sys  # Добавим импорт для работы с аргументами
-
-# Получаем GITHUB_TOKEN из аргумента командной строки
-github_token = sys.argv[1]  # Токен передается как первый аргумент
 
 # URL канала, с которого нужно извлечь токен
 channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
@@ -29,7 +25,7 @@ if source_tag:
         print(f"Video source URL: {video_src}")
 
         # Извлекаем токен из ссылки
-        start_index = video_src.find('token=') + len('token=')
+        start_index = video_src.find('token=') + len('token=')  # Найти токен в URL
         end_index = video_src.find('&', start_index)
         if end_index == -1:
             end_index = len(video_src)
@@ -54,7 +50,8 @@ if source_tag:
         # Выводим содержимое файла для проверки
         with open(playlist_path, 'r') as file:
             playlist_content = file.read()
-            print("ФИНАЛЬНОЕ СОДЕРЖИМОЕ playlist.m3u:\n" + playlist_content)
+            print("Содержимое файла playlist.m3u после обновления:")
+            print(playlist_content)
 
         # === Обновление файла через GitHub API ===
         repo_owner = "vtal999"
@@ -62,7 +59,10 @@ if source_tag:
         file_path = "playlist.m3u"
         branch = "main"
         
-        # Заголовки для аутентификации через GitHub API
+        # Получаем токен GITHUB_TOKEN из переменной окружения
+        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
+        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
+
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
@@ -98,6 +98,7 @@ if source_tag:
 
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
