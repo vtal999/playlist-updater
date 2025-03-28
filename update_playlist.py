@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 import os
 import base64
 
-# URL канала, с которого нужно извлечь токен
-channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
+# URL канала с нового сайта
+channel_url = "http://ip.viks.tv/114427-22-tv.html"  # Новый сайт
 
 # Заголовки для обхода кэширования (если необходимо)
 headers = {
@@ -16,26 +16,16 @@ headers = {
 response = requests.get(channel_url, headers=headers)
 soup = BeautifulSoup(response.text, 'html.parser')
 
-# Найдем ссылку с токеном в теге <source>
-source_tag = soup.find('source')
-if source_tag:
-    # Извлекаем ссылку из атрибута 'src' тега <source>
-    video_src = source_tag.get('src')
+# Здесь нужно найти ссылку с токеном в теге <video> и извлечь полный URL
+video_tag = soup.find('video')  # Ищем тег <video>
+if video_tag:
+    video_src = video_tag.get('src')  # Получаем полный URL из атрибута src
     if video_src:
         print(f"Video source URL: {video_src}")
 
-        # Извлекаем токен из ссылки
-        start_index = video_src.find('token=') + len('token=')  # Найти токен в URL
-        end_index = video_src.find('&', start_index)
-        if end_index == -1:
-            end_index = len(video_src)
-        extracted_token = video_src[start_index:end_index]
-        
-        print(f"Extracted token: {extracted_token}")
-
-        # Формируем новый URL с актуальным токеном
-        new_token_url = video_src.split('?')[0]
-        new_token_url += f"?token={extracted_token}"
+        # Формируем новый URL с актуальным токеном (если нужно подменить токен)
+        # В данном случае URL остается неизменным
+        new_token_url = video_src
 
         print(f"New token URL: {new_token_url}")
 
@@ -45,7 +35,7 @@ if source_tag:
 
         # Открываем плейлист и обновляем ссылку
         with open(playlist_path, 'w') as file:
-            file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n")
+            file.write(f"#EXTM3U\n#EXTINF:-1, Видео\n{new_token_url}\n")
 
         # Выводим содержимое файла для проверки
         with open(playlist_path, 'r') as file:
@@ -94,10 +84,10 @@ if source_tag:
             print("Ошибка при обновлении через API:", response.text)
 
     else:
-        print("Не удалось найти атрибут 'src' в теге <source>")
+        print("Не удалось найти атрибут 'src' в теге <video>")
 
 else:
-    print("Не удалось найти тег <source> на странице.")
+    print("Не удалось найти тег <video> на странице.")
 
 
 
