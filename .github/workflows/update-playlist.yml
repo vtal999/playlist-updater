@@ -38,10 +38,11 @@ jobs:
 
       - name: Force add the playlist file
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем токен GITHUB_TOKEN
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Используем автоматический GITHUB_TOKEN
 
 
 
