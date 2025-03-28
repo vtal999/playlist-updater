@@ -4,40 +4,42 @@ from bs4 import BeautifulSoup
 # URL канала, с которого нужно извлечь токен
 channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
 
+# Заголовки для обхода кэширования (если необходимо)
+headers = {
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+}
+
 # Получаем страницу канала
-response = requests.get(channel_url)
+response = requests.get(channel_url, headers=headers)
 soup = BeautifulSoup(response.text, 'html.parser')
 
-# Находим ссылку на видео
+# Найдем ссылку с токеном в исходном коде страницы
 video_tag = soup.find('video')
-if video_tag:
-    source_tag = video_tag.find('source')  # Находим тег <source> внутри <video>
-    if source_tag and 'src' in source_tag.attrs:
-        video_src = source_tag['src']  # Получаем ссылку с токеном из атрибута src
+video_src = video_tag['src'] if video_tag else None
 
-        # Разделяем URL и получаем базовый адрес
-        base_url = video_src.split('?')[0]
+# Если ссылка найдена, обновим токен
+if video_src:
+    # Выводим исходную ссылку с токеном для отладки
+    print(f"Video source URL: {video_src}")
 
-        # Делаем запрос к серверу для получения нового токена
-        response = requests.get(base_url)
-        # Предположим, что новый токен можно найти в URL или в ответе
-        # Нужно будет реализовать логику для извлечения нового токена из ответа
+    # Здесь нужно обработать ссылку, чтобы извлечь новый токен
+    new_token_url = video_src.split('?')[0]  # Убираем старый токен и оставляем базовую ссылку
+    new_token_url += "?token=<новый_токен>"  # Здесь добавляется новый токен
 
-        # Пример: получаем новый токен из URL
-        new_token = "новый_токен_из_ответа"  # Заменить на реальную логику получения
+    # Выводим новый URL для отладки
+    print(f"New token URL: {new_token_url}")
 
-        # Формируем новый URL с новым токеном
-        new_token_url = f"{base_url}?token={new_token}"
+    # Открываем плейлист и обновляем ссылку
+    with open('playlist.m3u', 'w') as file:
+        file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n")
 
-        # Записываем обновленный плейлист
-        with open('playlist.m3u', 'w') as file:
-            file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n")
-
-        print("Плейлист обновлен.")
-    else:
-        print("Ошибка: тег <source> или атрибут 'src' не найден")
+    # Выводим информацию о том, что плейлист обновлен
+    print(f"New playlist URL written: {new_token_url}")
 else:
-    print("Ошибка: тег <video> не найден")
+    # Если не удалось найти видео ссылку с токеном, выводим ошибку
+    print("Не удалось найти видео ссылку с токеном.")
+
 
 
 
