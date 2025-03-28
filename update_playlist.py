@@ -26,7 +26,7 @@ if source_tag:
         print(f"Video source URL: {video_src}")
 
         # Извлекаем токен из ссылки
-        start_index = video_src.find('token=') + len('token=') 
+        start_index = video_src.find('token=') + len('token=')
         end_index = video_src.find('&', start_index)
         if end_index == -1:
             end_index = len(video_src)
@@ -59,9 +59,9 @@ if source_tag:
         file_path = "playlist.m3u"
         branch = "main"
         
-        # Получаем GITHUB_TOKEN из переменной окружения
-        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN из секретов GitHub
-        print(f"GITHUB_TOKEN: {github_token}")  # Для отладки
+        # Получаем токен GITHUB_TOKEN из переменной окружения
+        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
+        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
