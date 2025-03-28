@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import os
-from git import Repo
 
 # URL канала, с которого нужно извлечь токен
 channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
@@ -22,7 +21,7 @@ if video_tag:
     # Используем get() чтобы избежать ошибки если атрибут 'src' не существует
     video_src = video_tag.get('src')
     if video_src:
-        # Извлекаем новый токен из URL
+        # Извлекаем токен из URL
         print(f"Video source URL: {video_src}")
         
         # Пример извлечения токена из URL
@@ -35,29 +34,28 @@ if video_tag:
         # Собираем новый URL с токеном
         new_token_url = video_src.split('?')[0] + f"?token={token}"
         
-        # Обновляем плейлист
+        # Обновляем содержимое файла в репозитории
+        file_path = 'playlist.m3u'  # Путь к вашему плейлисту в репозитории
+
+        # Новый контент для плейлиста
         new_playlist_content = f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_token_url}\n"
-        
-        # Убедитесь, что файл в репозитории GitHub обновляется
-        repo_path = '/home/runner/work/playlist-updater/playlist-updater'  # Путь до репозитория
-        playlist_path = os.path.join(repo_path, 'playlist.m3u')
 
-        # Открываем файл для записи обновленного плейлиста
-        with open(playlist_path, 'w') as file:
-            file.write(new_playlist_content)
-        
-        # Обновляем файл в репозитории
-        repo = Repo(repo_path)
-        repo.git.add(playlist_path)
-        repo.index.commit(f"Update playlist with new token: {token}")
-        repo.remotes.origin.push()
+        # Запись нового контента в файл
+        with open(file_path, 'w') as f:
+            f.write(new_playlist_content)
 
-        print(f"Playlist updated and pushed to GitHub: {new_token_url}")
+        print(f"New playlist URL written to file: {new_token_url}")
+
+        # Добавляем и коммитим изменения в репозиторий
+        os.system(f'git add {file_path}')
+        os.system(f'git commit -m "Update playlist with new token"')
+        os.system(f'git push')
 
     else:
         print("Не удалось найти атрибут 'src' в теге <video>")
 else:
     print("Не удалось найти тег <video> на странице.")
+
 
 
 
