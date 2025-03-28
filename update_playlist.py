@@ -23,8 +23,8 @@ driver.get(channel_url)
 driver.implicitly_wait(10)
 
 # Находим тег <video> и извлекаем атрибут 'src'
-video_tag = driver.find_element(By.TAG_NAME, 'video')
-if video_tag:
+try:
+    video_tag = driver.find_element(By.TAG_NAME, 'video')
     video_src = video_tag.get_attribute('src')
     if video_src:
         print(f"Video URL: {video_src}")
@@ -56,7 +56,10 @@ if video_tag:
         
         # Получаем токен GITHUB_TOKEN из переменной окружения
         github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
-        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
+        if not github_token:
+            print("Ошибка: GITHUB_TOKEN не передан в окружение")
+            driver.quit()
+            exit(1)  # Завершаем выполнение с ошибкой, если токен не найден
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
@@ -88,8 +91,8 @@ if video_tag:
         else:
             print("Ошибка при обновлении через API:", response.text)
 
-else:
-    print("Не удалось найти тег <video> на странице.")
+except Exception as e:
+    print(f"Произошла ошибка: {e}")
 
 # Закрываем драйвер
 driver.quit()
