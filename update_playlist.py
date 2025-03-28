@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import os
+import subprocess
 
 # URL канала, с которого нужно извлечь токен
 channel_url = "https://onlinetv.su/tv/kino/262-sapfir.html"
@@ -50,10 +52,20 @@ if source_tag:
 
         # Выводим информацию о том, что плейлист обновлен
         print(f"New playlist URL written to file: {new_token_url}")
+        
+        # Добавляем изменения в git и выполняем коммит
+        try:
+            subprocess.run(['git', 'add', playlist_path], check=True)
+            subprocess.run(['git', 'commit', '-m', '"Update playlist with new token"'], check=True)
+            subprocess.run(['git', 'push'], check=True)
+            print("Changes pushed to the repository.")
+        except subprocess.CalledProcessError as e:
+            print(f"Error during git commit/push: {e}")
     else:
         print("Не удалось найти атрибут 'src' в теге <source>")
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
