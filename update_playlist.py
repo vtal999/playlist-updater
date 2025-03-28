@@ -60,7 +60,7 @@ if source_tag:
         branch = "main"
         
         # Получаем персональный токен из переменной окружения
-        github_token = os.getenv("MY_PERSONAL_TOKEN") # Получаем ваш персональный токен
+        github_token = os.getenv("MY_PERSONAL_TOKEN")  # Получаем токен из переменной окружения
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
