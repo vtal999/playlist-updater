@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import os
-import subprocess
 import base64
 
 # URL канала, с которого нужно извлечь токен
@@ -62,6 +61,11 @@ if source_tag:
         # Получаем персональный токен из переменной окружения
         github_token = os.getenv("MY_PERSONAL_TOKEN")  # Получаем токен из переменной окружения
 
+        if not github_token:
+            print("Ошибка: Токен не найден в переменной окружения!")
+        else:
+            print(f"Используется токен: {github_token[:4]}...")
+
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
@@ -71,7 +75,7 @@ if source_tag:
             file_data = response.json()
             sha = file_data.get("sha", "")
         else:
-            print(f"Ошибка при получении информации о файле: {response.text}")
+            print(f"Ошибка при получении информации о файле: {response.status_code} - {response.text}")
             sha = ""
 
         # Кодируем содержимое плейлиста в base64
@@ -97,6 +101,7 @@ if source_tag:
 
 else:
     print("Не удалось найти тег <source> на странице.")
+
 
 
 
