@@ -34,8 +34,14 @@ jobs:
           CHROME_VERSION=$(google-chrome-stable --version | sed 's/[^0-9]*//g')
           # Скачиваем актуальную версию ChromeDriver
           DRIVER_VERSION=$(curl -sSL "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          curl -O "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
+          
+          # Проверим версию
+          echo "Chrome version: $CHROME_VERSION"
+          echo "Driver version: $DRIVER_VERSION"
+          
+          # Скачиваем и устанавливаем ChromeDriver
+          curl -sSL "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip" -o chromedriver.zip
+          unzip chromedriver.zip
           sudo mv chromedriver /usr/local/bin/chromedriver
           sudo chmod +x /usr/local/bin/chromedriver
 
