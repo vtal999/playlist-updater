@@ -123,7 +123,7 @@ def fetch_video_url_with_headers():
 
     # Добавляем cookies вручную, если они требуются (в примере они не добавлены, но если понадобятся, их нужно будет извлечь из браузера)
     cookies = {
-        'cookie_name': 'cookie_value'  # Замените на реальные cookies, если они нужны
+        'your_cookie_name': 'ABY2FK7UXaTBcXnfyeIRqJC23o6Iv8zfaVpVbLJvUd0YfkqtcD4wRgzkne1kWVV17vumJmtfUBAlk2T4grstv054kbJPDL78neJk0h2jFDQaVy5shBb_S-6z7gf4nD-Z1g1F7NGJPNHbhWfLY005R2ydMWGqLdVN_SyZXGEgtEbyer9JARrP6OEt9V9U2LdMdxF4Ab6fHOq4tH6GoXa-soheWPbhnVp8Lss5TgKj72vRYt_UFzvQtSa6zBqHJwO10j04c3vrJV8-ED2c7LQHnZf94jDr7gyUfxATPRSun1hmkybTHPVu1Og'
     }
 
     # Присваиваем cookies сессии
