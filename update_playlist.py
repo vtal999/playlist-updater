@@ -1,11 +1,11 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
 import base64
-from selenium.webdriver.chrome.options import Options
 import time
 
 # Функция для инициализации драйвера с использованием DevTools
@@ -25,13 +25,13 @@ def get_video_url(driver):
     channel_url = "http://ip.viks.tv/114427-22-tv.html"
     driver.get(channel_url)
     driver.implicitly_wait(10)
-    
-    # Слушаем события сетевых запросов
+
     video_url = None
+    
+    # Логируем все запросы
     def handle_request(request):
         nonlocal video_url
-        # Логируем все запросы
-        print(f"Запрос: {request['url']}")
+        print(f"Запрос: {request['url']}")  # Логируем URL запроса
         
         # Если URL содержит "index.m3u8" и статус 200, сохраняем его
         if "index.m3u8" in request['url'] and request.get('status') == 200:
@@ -50,7 +50,7 @@ def get_video_url(driver):
     else:
         print("Не удалось найти ссылку на видео.")
         
-        # Альтернативный способ - попробуем найти URL через iframe или другие элементы на странице
+        # Альтернативный способ - попробуем найти iframe и получить src
         try:
             iframe = driver.find_element(By.TAG_NAME, "iframe")
             iframe_src = iframe.get_attribute("src")
@@ -129,6 +129,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
