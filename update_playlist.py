@@ -16,22 +16,22 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 # URL канала, с которого нужно извлечь токен
 channel_url = "http://ip.viks.tv/114427-22-tv.html"
 
-# Открываем страницу
-driver.get(channel_url)
+try:
+    # Открываем страницу
+    driver.get(channel_url)
 
-# Ждем, пока тег <video> появится на странице
-driver.implicitly_wait(10)
+    # Ждем, пока тег <video> появится на странице
+    driver.implicitly_wait(10)
 
-# Находим тег <video> и извлекаем атрибут 'src'
-video_tag = driver.find_element(By.TAG_NAME, 'video')
-if video_tag:
-    video_src = video_tag.get_attribute('src')
+    # Находим тег <video> и извлекаем атрибут 'src'
+    video_tag = driver.find_element(By.TAG_NAME, 'video')
+    video_src = video_tag.get_attribute('src') if video_tag else None
+
     if video_src:
         print(f"Video URL: {video_src}")
 
         # Формируем новый URL
         new_url = video_src
-
         print(f"New URL: {new_url}")
 
         # Путь к плейлисту
@@ -56,9 +56,7 @@ if video_tag:
         
         github_token = os.getenv("GITHUB_TOKEN")
         if not github_token:
-            print("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
-            driver.quit()
-            exit(1)
+            raise EnvironmentError("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
@@ -71,9 +69,7 @@ if video_tag:
         elif response.status_code == 404:
             sha = ""
         else:
-            print(f"Ошибка при получении информации о файле: {response.text}")
-            driver.quit()
-            exit(1)
+            raise Exception(f"Ошибка при получении информации о файле: {response.text}")
 
         # Кодируем содержимое плейлиста в base64
         encoded_content = base64.b64encode(playlist_content.encode()).decode()
@@ -91,13 +87,16 @@ if video_tag:
         if response.status_code in [200, 201]:
             print("Файл успешно обновлен через GitHub API.")
         else:
-            print("Ошибка при обновлении через API:", response.text)
+            raise Exception(f"Ошибка при обновлении через API: {response.text}")
+    else:
+        print("Не удалось найти тег <video> на странице.")
+        
+except Exception as e:
+    print(f"Произошла ошибка: {e}")
 
-else:
-    print("Не удалось найти тег <video> на странице.")
-
-# Закрываем драйвер
-driver.quit()
+finally:
+    # Закрываем драйвер
+    driver.quit()
 
 
 
