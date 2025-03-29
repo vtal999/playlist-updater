@@ -69,38 +69,43 @@ if video_tag:
         headers = {
             "Authorization": f"token {github_token}",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0",
-            "Referer": "http://ip.viks.tv/"  # Убедитесь, что здесь нет кириллических символов
+            "Referer": "http://ip.viks.tv/"  # Здесь символы в заголовках должны быть безопасными
         }
 
-        url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
+        # Убедитесь, что заголовки не содержат кириллических символов или других нестандартных символов
+        # В частности, обратите внимание на значение "Referer" и "User-Agent"
+        try:
+            url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
-        # Получаем информацию о текущем файле, чтобы обновить его
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            file_data = response.json()
-            sha = file_data.get("sha", "")
-        else:
-            print(f"Ошибка при получении информации о файле: {response.text}")
-            sha = ""
+            # Получаем информацию о текущем файле, чтобы обновить его
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                file_data = response.json()
+                sha = file_data.get("sha", "")
+            else:
+                print(f"Ошибка при получении информации о файле: {response.text}")
+                sha = ""
 
-        # Кодируем содержимое плейлиста в base64
-        encoded_content = base64.b64encode(playlist_content.encode()).decode()
+            # Кодируем содержимое плейлиста в base64
+            encoded_content = base64.b64encode(playlist_content.encode()).decode()
 
-        data = {
-            "message": "Update playlist with new token",
-            "content": encoded_content,
-            "sha": sha,
-            "branch": branch
-        }
+            data = {
+                "message": "Update playlist with new token",
+                "content": encoded_content,
+                "sha": sha,
+                "branch": branch
+            }
 
-        # Отправляем запрос для обновления файла
-        response = requests.put(url, headers=headers, json=data)
+            # Отправляем запрос для обновления файла
+            response = requests.put(url, headers=headers, json=data)
 
-        if response.status_code in [200, 201]:
-            print("Файл успешно обновлен через GitHub API.")
-        else:
-            print("Ошибка при обновлении через API:", response.text)
+            if response.status_code in [200, 201]:
+                print("Файл успешно обновлен через GitHub API.")
+            else:
+                print("Ошибка при обновлении через API:", response.text)
 
+        except requests.exceptions.RequestException as e:
+            print(f"Ошибка при отправке запроса: {e}")
 else:
     print("Не удалось найти тег <video> на странице.")
 
