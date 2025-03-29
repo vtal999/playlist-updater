@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
@@ -15,21 +14,18 @@ def init_driver():
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
 
     # Включаем DevTools Protocol
-    caps = DesiredCapabilities.CHROME
-    caps['goog:loggingPrefs'] = {'performance': 'ALL'}  # Перехват всех логов производительности (включая сетевые запросы)
-
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options, desired_capabilities=caps)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
 
 # Функция для извлечения URL видео из логов сети
 def extract_video_url(driver):
+    # Получаем логи из DevTools
     logs = driver.get_log('performance')
     video_url = None
     for log in logs:
         message = log['message']
         if 'MediaPlayer' in message and 'video' in message:
-            # Здесь нужно будет настроить фильтрацию для поиска нужной ссылки
-            # Примерный фильтр, зависит от структуры лога
+            # Примерный фильтр для поиска нужной ссылки (можно настроить под свою задачу)
             if 'video' in message and 'm3u8' in message:  # Условие, чтобы найти ссылку на видео
                 start_index = message.find("https")
                 end_index = message.find("m3u8") + 4
