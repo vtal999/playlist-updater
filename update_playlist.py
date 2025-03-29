@@ -57,14 +57,9 @@ if video_tag:
         # Получаем токен GITHUB_TOKEN из переменной окружения
         github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
         
-        # Если токен не передан в переменную окружения, задаем его вручную для тестирования
         if not github_token:
-            github_token = "ваш_токен_вставьте_сюда"  # Здесь вставьте ваш действующий токен GitHub
-
-        if github_token:
-            print(f"GITHUB_TOKEN: {github_token}")
-        else:
-            print("Ошибка: токен не передан!")
+            print("Ошибка: GITHUB_TOKEN не найден!")
+            exit(1)
 
         headers = {
             "Authorization": f"token {github_token}",
@@ -72,11 +67,9 @@ if video_tag:
             "Referer": "http://ip.viks.tv/"
         }
 
-        # Убедитесь, что заголовки не содержат кириллических символов или других нестандартных символов
-        # В частности, обратите внимание на значение "Referer" и "User-Agent"
-        try:
-            url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
+        url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
+        try:
             # Получаем информацию о текущем файле, чтобы обновить его
             response = requests.get(url, headers=headers)
             if response.status_code == 200:
@@ -111,6 +104,7 @@ else:
 
 # Закрываем драйвер
 driver.quit()
+
 
 
 
