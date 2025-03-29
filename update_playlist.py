@@ -35,12 +35,12 @@ def get_video_url_from_network(driver):
     for entry in performance_logs:
         print(entry)  # Выводим каждый лог для отладки
 
-    # Ищем нужный URL
+    # Ищем URL, который содержит "m3u8"
     for entry in performance_logs:
         message = entry['message']
-        if 'https://s.viks.tv' in message and 'm3u8' in message:
+        if 's.viks.tv' in message and 'm3u8' in message:
             # Извлекаем нужный URL
-            start_index = message.find("https://")
+            start_index = message.find("https://s.viks.tv")
             end_index = message.find("m3u8") + 4
             video_url = message[start_index:end_index]
             return video_url
