@@ -69,7 +69,7 @@ if video_tag:
         headers = {
             "Authorization": f"token {github_token}",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0",
-            "Referer": "http://ip.viks.tv/"  # Здесь символы в заголовках должны быть безопасными
+            "Referer": "http://ip.viks.tv/"
         }
 
         # Убедитесь, что заголовки не содержат кириллических символов или других нестандартных символов
@@ -111,6 +111,7 @@ else:
 
 # Закрываем драйвер
 driver.quit()
+
 
 
 
