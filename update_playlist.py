@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
@@ -88,18 +90,21 @@ def main():
         # Открываем страницу
         channel_url = "http://ip.viks.tv/114427-22-tv.html"
         driver.get(channel_url)
-        driver.implicitly_wait(10)
+        
+        # Ожидаем загрузки элемента <video> перед тем, как продолжить
+        video_tag = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.TAG_NAME, 'video'))
+        )
 
         # Получаем cookies и заголовки
         cookies, headers = get_cookies_and_headers(driver)
 
-        # Находим тег <video> и извлекаем атрибут 'src'
-        video_tag = driver.find_element(By.TAG_NAME, 'video')
+        # Извлекаем ссылку
         video_src = video_tag.get_attribute('src') if video_tag else None
-        
+
         if video_src:
             print(f"Video URL: {video_src}")
-            
+
             # Создаем сессию с cookies
             session = requests.Session()
             for cookie in cookies:
@@ -123,6 +128,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
