@@ -38,10 +38,10 @@ def get_video_url_from_network(driver):
     # Ищем URL, который содержит "m3u8"
     for entry in performance_logs:
         message = entry['message']
-        if 's.viks.tv' in message and 'm3u8' in message:
+        if 'https://s.viks.tv' in message and '.m3u8' in message:
             # Извлекаем нужный URL
             start_index = message.find("https://s.viks.tv")
-            end_index = message.find("m3u8") + 4
+            end_index = message.find(".m3u8") + 5
             video_url = message[start_index:end_index]
             
             # Выводим ссылку на видео
@@ -127,6 +127,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
