@@ -1,4 +1,4 @@
-https://github.com/vtal999/playlist-updater/blob/main/update_playlist.py и его код: from selenium import webdriver
+from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
