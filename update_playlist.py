@@ -6,6 +6,7 @@ import requests
 import os
 import base64
 from selenium.webdriver.chrome.options import Options
+import time
 
 # Функция для инициализации драйвера с использованием DevTools
 def init_driver():
@@ -29,12 +30,19 @@ def get_video_url(driver):
     video_url = None
     def handle_request(request):
         nonlocal video_url
-        if "index.m3u8" in request['url']:  # Если URL содержит "index.m3u8"
+        # Логируем все запросы
+        print(f"Запрос: {request['url']}")
+        
+        # Если URL содержит "index.m3u8" и статус 200, сохраняем его
+        if "index.m3u8" in request['url'] and request.get('status') == 200:
             video_url = request['url']
             print(f"Найден URL видео: {video_url}")
     
-    driver.request_interceptor = handle_request  # Перехватываем запросы
-    driver.get(channel_url)  # Еще раз загружаем страницу для прослушивания запросов
+    # Подключаем перехват запросов
+    driver.request_interceptor = handle_request
+    
+    # Принудительно ждем, чтобы все запросы успели выполниться
+    time.sleep(5)  # Подождем 5 секунд для завершения всех запросов
 
     if video_url:
         print(f"Video URL: {video_url}")
