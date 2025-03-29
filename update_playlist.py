@@ -26,6 +26,12 @@ def get_video_url_from_network(driver):
 
     # Сбор всех сетевых запросов
     performance_logs = driver.get_log('performance')
+    
+    # Выводим все логи для отладки
+    for entry in performance_logs:
+        print(entry)  # Выводим каждый лог для отладки
+
+    # Ищем нужный URL
     for entry in performance_logs:
         message = entry['message']
         if 'https://s.viks.tv' in message and 'm3u8' in message:
