@@ -22,16 +22,19 @@ def init_driver():
 # Функция для перехвата сетевых запросов
 def capture_network_requests(driver):
     # Слушаем все сетевые запросы
-    driver.request_interceptor = log_network_requests
-
-    # Ждем несколько секунд для сбора данных
+    driver.get("http://ip.viks.tv/114427-22-tv.html")  # Загружаем нужную страницу
+    
+    # Ждем несколько секунд, чтобы данные успели загрузиться
     time.sleep(10)
+    
+    # Перебираем все запросы
+    for request in driver.requests:
+        # Проверяем, что запрос содержит m3u8 и с правильным доменом
+        if 's.viks.tv' in request.url and 'm3u8' in request.url:
+            print(f"Найденный m3u8 URL: {request.url}")
+            return request.url  # Возвращаем найденный URL
 
-# Функция для логирования сетевых запросов
-def log_network_requests(request):
-    print(f"URL запроса: {request.url}")
-    if 's.viks.tv' in request.url and 'm3u8' in request.url:
-        print(f"Найденный m3u8 URL: {request.url}")
+    return None  # Если не нашли m3u8 ссылку
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
@@ -90,14 +93,13 @@ def main():
     driver = init_driver()
 
     try:
-        channel_url = "http://ip.viks.tv/114427-22-tv.html"
-        driver.get(channel_url)
+        video_url = capture_network_requests(driver)
 
-        # Перехватываем и выводим все сетевые запросы
-        capture_network_requests(driver)
-
-        # Если мы не нашли видео-ссылку через перехват
-        print("Не удалось найти видео-ссылку в логах сети.")
+        if video_url:
+            print(f"Найден видео URL: {video_url}")
+            update_playlist(video_url)
+        else:
+            print("Не удалось найти видео-ссылку в логах сети.")
 
     except Exception as e:
         print(f"Произошла ошибка: {e}")
