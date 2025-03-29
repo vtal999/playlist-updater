@@ -23,20 +23,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt  # Используем requirements.txt для установки зависимостей
 
-      - name: Update Chrome and ChromeDriver
-        run: |
-          sudo apt update
-          sudo apt install -y google-chrome-stable
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
-          curl -sS -o chromedriver.zip "https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip"
-          unzip chromedriver.zip
-          sudo mv chromedriver /usr/local/bin/
-          chromedriver --version
-
       - name: Configure Git user
         run: |
           git config --global user.email "you@example.com"  # Укажите свой email
           git config --global user.name "Your Name"  # Укажите свое имя
+
+      - name: Install latest Chrome and ChromeDriver
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+          DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)
+          wget -N https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          chmod +x chromedriver
+          sudo mv -f chromedriver /usr/local/bin/
 
       - name: Update playlist with new token
         run: |
@@ -51,5 +52,4 @@ jobs:
       - name: Push changes
         run: |
           git push --force https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Принудительный пуш
-
 
