@@ -10,51 +10,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Проверяем репозиторий
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Обновленная версия
 
-      # 2. Устанавливаем Python
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v3  # Обновленная версия
         with:
-          python-version: '3.9'
+          python-version: '3.9'  # Указываем точную версию Python
 
-      # 3. Устанавливаем зависимости
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 selenium webdriver-manager
+          pip install requests beautifulsoup4 selenium webdriver-manager  # Установка дополнительных библиотек, если нужно
 
-      # 4. Конфигурируем Git пользователя
       - name: Configure Git user
         run: |
           git config --global user.email "you@example.com"  # Укажите свой email
           git config --global user.name "Your Name"  # Укажите свое имя
 
-      # 5. Проверка доступности токена (дебаг)
-      - name: Show GITHUB_TOKEN for debugging
-        run: echo "GITHUB_TOKEN: $GITHUB_TOKEN"  # Логирование для дебага
-
-      # 6. Запуск скрипта для обновления плейлиста
       - name: Update playlist with new token
         run: |
           echo "MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}"  # Проверим доступность токена
-          python3 update_playlist.py  # Запуск твоего скрипта
+          python3 update_playlist.py  # Запуск вашего скрипта
 
-      # 7. Проверка изменений в файле
       - name: Check for changes before pushing
         run: |
-          git diff  # Проверяем изменения в репозитории
+          git diff  # Проверяем изменения
 
-      # 8. Принудительно добавляем файл и пушим изменения
       - name: Force add the playlist file
         run: |
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token" || echo "No changes to commit"  # Если изменений нет, пропускаем
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для аутентификации
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для аутентификации
 
-      # 9. Проверяем содержимое файла
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
