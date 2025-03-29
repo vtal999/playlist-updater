@@ -1,18 +1,15 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 import requests
 import os
-import base64
 
-# Функция для инициализации драйвера с заголовками
+# Функция для инициализации драйвера
 def init_driver():
     options = Options()
-    options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
+    options.add_argument("--headless")  # Фоновый режим
     options.add_argument("User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0")
     options.add_argument("Referer=http://ip.viks.tv/")
     options.add_argument("Origin=http://ip.viks.tv/")
@@ -92,9 +89,7 @@ def main():
         driver.get(channel_url)
         
         # Ожидаем загрузки элемента <video> перед тем, как продолжить
-        video_tag = WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.TAG_NAME, 'video'))
-        )
+        video_tag = driver.find_element(By.TAG_NAME, 'video')
 
         # Получаем cookies и заголовки
         cookies, headers = get_cookies_and_headers(driver)
