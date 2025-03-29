@@ -1,23 +1,41 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
 import base64
 
-# Функция для инициализации драйвера
-def init_driver():
+# Функция для инициализации драйвера с cookies
+def init_driver_with_cookies():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
-    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0")
-    options.add_argument("referer=http://ip.viks.tv/")
-    options.add_argument("origin=http://ip.viks.tv/")
-
+    options.add_argument("--headless")  # Запуск без интерфейса
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+    # Открываем страницу, чтобы установить cookies
+    driver.get("http://ip.viks.tv/114427-22-tv.html")
+
+    # Пример добавления cookies
+    cookies = [
+        {'name': 'IDE', 'value': 'AHWqTUkYcnP5qWuWeCec2kArikuNMa6qaPwJ2c68Kagkr3n2H18L2tuGY4PWYosE', 'domain': '.doubleclick.net', 'path': '/'},
+        {'name': 'UUID', 'value': 'ec209aeb-1283-55ad-8a81-96a2cf31b0b6', 'domain': '.srvd2204.com', 'path': '/'},
+        {'name': '_ga', 'value': 'GA1.1.1605079928.1743259499', 'domain': '.viks.tv', 'path': '/'},
+        {'name': 'csc', 'value': '913-1743345893366-781-1--', 'domain': '.srvd2204.com', 'path': '/'},
+        {'name': 'ec_v50fr', 'value': '56cdbf5fbe1545fee8326434e5daf21f', 'domain': 'ip.viks.tv', 'path': '/'}
+    ]
+
+    for cookie in cookies:
+        driver.add_cookie(cookie)  # Добавляем каждый cookie
+
+    driver.refresh()  # Обновляем страницу с установленными cookies
+
     return driver
+
+# Функция для получения ссылки на видео
+def get_video_url(driver):
+    video_tag = driver.find_element(By.TAG_NAME, 'video')
+    video_url = video_tag.get_attribute('src') if video_tag else None
+    return video_url
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
@@ -73,26 +91,18 @@ def update_playlist(video_url):
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
 def main():
-    driver = init_driver()
+    driver = init_driver_with_cookies()
 
     try:
-        channel_url = "http://ip.viks.tv/114427-22-tv.html"
-        driver.get(channel_url)
-        driver.implicitly_wait(10)
-
-        # Дождаться, пока тег <video> станет доступным
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'video')))
+        # Получаем ссылку на видео
+        video_url = get_video_url(driver)
         
-        # Находим тег <video> и извлекаем атрибут 'src'
-        video_tag = driver.find_element(By.TAG_NAME, 'video')
-        video_src = video_tag.get_attribute('src') if video_tag else None
-
-        if video_src:
-            print(f"Video URL: {video_src}")
-            update_playlist(video_src)
+        if video_url:
+            print(f"Video URL: {video_url}")
+            update_playlist(video_url)
         else:
             print("Не удалось найти тег <video> на странице.")
-
+    
     except Exception as e:
         print(f"Произошла ошибка: {e}")
 
