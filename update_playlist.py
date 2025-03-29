@@ -13,8 +13,8 @@ def init_driver_with_cookies():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     # Открываем страницу на домене для cookies
-    driver.get("http://ip.viks.tv/")  # Например, сначала открываем страницу на нужном домене
-    
+    driver.get("http://viks.tv/")  # Открываем домен viks.tv перед добавлением cookies
+
     # Пример добавления cookies (они должны быть для правильного домена)
     cookies = [
         {'name': 'IDE', 'value': 'AHWqTUkYcnP5qWuWeCec2kArikuNMa6qaPwJ2c68Kagkr3n2H18L2tuGY4PWYosE', 'domain': '.doubleclick.net', 'path': '/'},
