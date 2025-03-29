@@ -1,4 +1,4 @@
-from selenium import webdriver
+from seleniumwire import webdriver  # Импортируем webdriver из seleniumwire
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
@@ -12,21 +12,16 @@ def init_driver():
     # Настройка опций для Chrome
     options = Options()
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
-    options.add_argument("--disable-gpu")  # Отключаем GPU, чтобы не было зависаний
-    options.add_argument("--no-sandbox")  # Чтобы не было ошибок в некоторых средах
-    options.add_argument("--disable-software-rasterizer")  # Отключаем софт рендерер
 
-    # Включаем DevTools Protocol
+    # Создаём драйвер с использованием selenium-wire
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-    # Подключаем к DevTools
-    driver.execute_cdp_cmd('Network.enable', {})
-
+    # Возвращаем драйвер
     return driver
 
 # Функция для перехвата сетевых запросов
 def capture_network_requests(driver):
-    # Слушаем все запросы
+    # Слушаем все сетевые запросы
     driver.request_interceptor = log_network_requests
 
     # Ждем несколько секунд для сбора данных
@@ -34,10 +29,9 @@ def capture_network_requests(driver):
 
 # Функция для логирования сетевых запросов
 def log_network_requests(request):
-    # Печатаем все запросы, чтобы убедиться, что получаем нужные данные
-    print(f"URL запроса: {request['url']}")
-    if 's.viks.tv' in request['url'] and 'm3u8' in request['url']:
-        print(f"Найденный m3u8 URL: {request['url']}")
+    print(f"URL запроса: {request.url}")
+    if 's.viks.tv' in request.url and 'm3u8' in request.url:
+        print(f"Найденный m3u8 URL: {request.url}")
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
