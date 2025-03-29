@@ -30,7 +30,7 @@ jobs:
 
       - name: Update playlist with new token
         run: |
-          echo "MY_PERSONAL_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}"  # Проверим доступность токена
+          echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"  # Проверяем доступность токена
           python3 update_playlist.py  # Запуск вашего скрипта
 
       - name: Check for changes before pushing
@@ -46,6 +46,7 @@ jobs:
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
+
 
 
 
