@@ -1,10 +1,10 @@
-import requests
-import os
-import base64
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+import requests
+import os
+import base64
 
 # Настройка веб-драйвера
 options = webdriver.ChromeOptions()
@@ -31,6 +31,7 @@ if video_tag:
 
         # Формируем новый URL
         new_url = video_src
+
         print(f"New URL: {new_url}")
 
         # Путь к плейлисту
@@ -52,10 +53,18 @@ if video_tag:
         repo_name = "playlist-updater"
         file_path = "playlist.m3u"
         branch = "main"
-        
+
         # Получаем токен GITHUB_TOKEN из переменной окружения
         github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
-        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
+        
+        # Если токен не передан в переменную окружения, задаем его вручную для тестирования
+        if not github_token:
+            github_token = "ваш_токен_вставьте_сюда"  # Здесь вставьте ваш действующий токен GitHub
+
+        if github_token:
+            print(f"GITHUB_TOKEN: {github_token}")
+        else:
+            print("Ошибка: токен не передан!")
 
         headers = {
             "Authorization": f"token {github_token}",
@@ -63,26 +72,20 @@ if video_tag:
             "Referer": "http://ip.viks.tv/"
         }
 
-        # Получаем данные о плейлисте через запрос к API
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
-        response = requests.get(url, headers=headers)
-        
-        # Проверка статуса ответа
-        if response.status_code != 200:
-            print(f"Ошибка запроса: {response.status_code} {response.text}")
-            exit(1)
 
         # Получаем информацию о текущем файле, чтобы обновить его
-        file_data = response.json()
-        sha = file_data.get("sha", "")
-        if not sha:
-            print("Ошибка: не удалось получить SHA файла.")
-            exit(1)
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            file_data = response.json()
+            sha = file_data.get("sha", "")
+        else:
+            print(f"Ошибка при получении информации о файле: {response.text}")
+            sha = ""
 
         # Кодируем содержимое плейлиста в base64
         encoded_content = base64.b64encode(playlist_content.encode()).decode()
 
-        # Данные для обновления файла
         data = {
             "message": "Update playlist with new token",
             "content": encoded_content,
@@ -92,6 +95,7 @@ if video_tag:
 
         # Отправляем запрос для обновления файла
         response = requests.put(url, headers=headers, json=data)
+
         if response.status_code in [200, 201]:
             print("Файл успешно обновлен через GitHub API.")
         else:
@@ -102,6 +106,7 @@ else:
 
 # Закрываем драйвер
 driver.quit()
+
 
 
 
