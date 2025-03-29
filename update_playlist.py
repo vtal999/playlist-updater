@@ -1,15 +1,22 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
 import base64
 
-# Функция для инициализации драйвера
+# Функция для инициализации драйвера с заголовками
 def init_driver():
-    options = webdriver.ChromeOptions()
+    options = Options()
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
+    
+    # Установить заголовки
+    options.add_argument("User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0")
+    options.add_argument("Referer=http://ip.viks.tv/")
+    options.add_argument("Origin=http://ip.viks.tv/")
+
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
 
@@ -92,6 +99,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
