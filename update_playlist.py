@@ -66,88 +66,51 @@ def update_playlist(video_url):
     else:
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
-# Функция для получения видео URL с сайта
-def get_video_url():
-    driver = init_driver()
-
-    try:
-        channel_url = "http://ip.viks.tv/114427-22-tv.html"
-        driver.get(channel_url)
-        driver.implicitly_wait(10)
-
-        # Находим тег <video> и извлекаем атрибут 'src'
-        video_tag = driver.find_element(By.TAG_NAME, 'video')
-        video_src = video_tag.get_attribute('src') if video_tag else None
-
-        if video_src:
-            print(f"Video URL: {video_src}")
-            return video_src
-        else:
-            print("Не удалось найти тег <video> на странице.")
-            return None
-
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-        return None
-
-    finally:
-        driver.quit()
-
-# Функция для получения актуальной ссылки через requests с использованием заголовков и cookies
-def fetch_video_url_with_headers():
-    # Заголовки, которые используются в браузере
+# Функция для получения видео-ссылки с учетом заголовков
+def get_video_url(driver):
+    # Заголовки для запроса
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0',
         'Referer': 'http://ip.viks.tv/',
-        'Origin': 'http://ip.viks.tv/',
-        'Accept': '*/*',
-        'Accept-Encoding': 'gzip, deflate, br, zstd',
-        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uk;q=0.6',
-        'Connection': 'keep-alive',
-        'Sec-CH-UA': '"Not A(Brand";v="8", "Chromium";v="132", "Opera";v="117"',
-        'Sec-CH-UA-Mobile': '?0',
-        'Sec-CH-UA-Platform': '"Windows"',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'cross-site'
+        'Origin': 'http://ip.viks.tv',
     }
 
-    # URL, который будет получен через парсинг страницы (это уже будет рабочая ссылка)
-    url = get_video_url()
+    channel_url = "http://ip.viks.tv/114427-22-tv.html"
+    driver.get(channel_url)
+    driver.implicitly_wait(10)
 
-    if not url:
-        return None
+    # Находим тег <video> и извлекаем атрибут 'src'
+    video_tag = driver.find_element(By.TAG_NAME, 'video')
+    video_src = video_tag.get_attribute('src') if video_tag else None
 
-    # Создаем сессию для хранения cookies
-    session = requests.Session()
-
-    # Вставляем cookies вручную
-    cookies = {
-        'DSID': 'ABY2FK7UXaTBcXnfyeIRqJC23o6Iv8zfaVpVbLJvUd0YfkqtcD4wRgzkne1kWVV17vumJmtfUBAlk2T4grstv054kbJPDL78neJk0h2jFDQaVy5shBb_S-6z7gf4nD-Z1g1F7NGJPNHbhWfLY005R2ydMWGqLdVN_SyZXGEgtEbyer9JARrP6OEt9V9U2LdMdxF4Ab6fHOq4tH6GoXa-soheWPbhnVp8Lss5TgKj72vRYt_UFzvQtSa6zBqHJwO10j04c3vrJV8-ED2c7LQHnZf94jDr7gyUfxATPRSun1hmkybTHPVu1Og',
-        'IDE': 'AHWqTUmeXwSZ0pDwyAlalCT2z9FyRLo9pLnBeKn4krERYBoK4SL1DPK7fhJmzVZo7kU',
-    }
-
-    # Присваиваем cookies сессии
-    session.cookies.update(cookies)
-
-    # Делаем запрос с использованием cookies и заголовков
-    response = session.get(url, headers=headers)
-
-    # Проверяем успешность запроса
-    if response.status_code == 200:
-        print("Ссылка получена успешно!")
-        return url
+    if video_src:
+        print(f"Video URL: {video_src}")
+        
+        # Запрос с заголовками для получения ссылки
+        response = requests.get(video_src, headers=headers)
+        if response.status_code == 200:
+            print("Видео доступно!")
+            return video_src
+        else:
+            print("Не удалось получить видео.")
+            return None
     else:
-        print(f"Ошибка при запросе: {response.status_code}")
+        print("Не удалось найти тег <video> на странице.")
         return None
 
-# Основная функция
 def main():
-    # Получаем актуальную ссылку через selenium или с помощью fetch_video_url_with_headers
-    video_url = fetch_video_url_with_headers()
+    driver = init_driver()
 
-    if video_url:
-        update_playlist(video_url)
+    try:
+        video_url = get_video_url(driver)
+        if video_url:
+            update_playlist(video_url)
+        else:
+            print("Не удалось обновить плейлист, так как ссылка на видео не получена.")
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+    finally:
+        driver.quit()
 
 if __name__ == "__main__":
     main()
