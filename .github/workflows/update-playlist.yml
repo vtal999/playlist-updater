@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 selenium webdriver-manager  # Установка дополнительных библиотек
+          pip install requests beautifulsoup4 selenium webdriver-manager  # Установка дополнительных библиотек, если нужно
 
       - name: Configure Git user
         run: |
@@ -41,14 +41,12 @@ jobs:
         run: |
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token" || echo "No changes to commit"  # Если изменений нет, пропускаем
-
-      - name: Push changes to GitHub repository
-        run: |
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Пушим с токеном
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для аутентификации
 
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
+
 
 
 
