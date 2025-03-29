@@ -31,25 +31,23 @@ jobs:
       - name: Update playlist with new token
         run: |
           echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"  # Проверим доступность токена
-          python3 update_playlist.py  # Запуск вашего скрипта
+          export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}  # Передаем токен в окружение
+          python3 update_playlist.py  # Запуск твоего скрипта с токеном
 
       - name: Check for changes before pushing
         run: |
           git diff  # Проверяем изменения
 
-      - name: Pull the latest changes from the remote
-        run: |
-          git pull origin main --rebase  # Тянем последние изменения, чтобы избежать конфликтов
-
       - name: Force add the playlist file
         run: |
           git add -f playlist.m3u  # Принудительное добавление файла
           git commit -m "Update playlist with new token" || echo "No changes to commit"  # Если изменений нет, пропускаем
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для аутентификации
+          git push --force https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Принудительный пуш
 
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
+
 
 
 
