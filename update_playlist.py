@@ -1,38 +1,39 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
 import base64
 import time
 
-# Функция для инициализации драйвера с использованием DevTools
+# Функция для инициализации драйвера с включенным DevTools для перехвата запросов
 def init_driver():
     options = Options()
-    options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
+    options.add_argument("--headless")  # Без интерфейса (если не нужно окно браузера)
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     
-    # Включаем протокол DevTools для перехвата запросов
+    # Включаем DevTools для перехвата запросов
     driver.execute_cdp_cmd('Network.enable', {})
     driver.execute_cdp_cmd('Network.setCacheDisabled', {"cacheDisabled": True})
-    
+
     return driver
 
-# Функция для получения видео-ссылки из сетевых запросов
+# Функция для получения URL видео из сетевых запросов
 def get_video_url(driver):
-    channel_url = "http://ip.viks.tv/114427-22-tv.html"
+    channel_url = "http://ip.viks.tv/114427-22-tv.html"  # Замените на URL вашего сайта
     driver.get(channel_url)
     driver.implicitly_wait(10)
 
     video_url = None
-    
-    # Логируем все запросы
+
+    # Обработчик, который будет вызван для каждого запроса
     def handle_request(request):
         nonlocal video_url
         print(f"Запрос: {request['url']}")  # Логируем URL запроса
         
-        # Если URL содержит "index.m3u8" и статус 200, сохраняем его
+        # Ищем в URL запросов m3u8
         if "index.m3u8" in request['url'] and request.get('status') == 200:
             video_url = request['url']
             print(f"Найден URL видео: {video_url}")
@@ -40,8 +41,8 @@ def get_video_url(driver):
     # Подключаем перехват запросов
     driver.request_interceptor = handle_request
     
-    # Принудительно ждем, чтобы все запросы успели выполниться
-    time.sleep(5)  # Подождем 5 секунд для завершения всех запросов
+    # Ожидаем некоторое время для выполнения всех запросов
+    time.sleep(5)
 
     if video_url:
         print(f"Video URL: {video_url}")
@@ -119,6 +120,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
