@@ -23,31 +23,27 @@ def init_driver():
 
     # Подключаем к DevTools
     driver.execute_cdp_cmd('Network.enable', {})
+
+    # Включаем логирование запросов
+    driver.request_interceptor = log_network_requests
     
     return driver
+
+# Функция для логирования сетевых запросов
+def log_network_requests(request):
+    print(f"URL запроса: {request['url']}")
+    if 's.viks.tv' in request['url'] and '.m3u8' in request['url']:
+        print(f"Найденный m3u8 URL: {request['url']}")
 
 # Функция для извлечения URL видео из сетевых запросов
 def get_video_url_from_network(driver):
     # Ожидаем, что страница загрузится
     WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))  # Подождем загрузки страницы
 
-    video_url = None
-
-    # Слушаем сетевые запросы
-    def intercept_request(request):
-        nonlocal video_url
-        # Фильтруем запросы, ищем ссылку на m3u8
-        if 's.viks.tv' in request['response']['url'] and '.m3u8' in request['response']['url']:
-            video_url = request['response']['url']
-            print(f"Найденный видео-URL: {video_url}")
+    # Ждем немного, чтобы все запросы были перехвачены
+    time.sleep(10)
     
-    # Подключаем обработчик запросов
-    driver.request_interceptor = intercept_request
-
-    # Ожидаем, что запросы будут обработаны
-    time.sleep(10)  # Подождем немного, чтобы запросы успели пройти
-
-    return video_url
+    return None  # Возвращаем None, так как запросы обрабатываются через интерсептор
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
@@ -126,12 +122,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
 
 
 
