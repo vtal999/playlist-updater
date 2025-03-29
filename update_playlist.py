@@ -20,8 +20,12 @@ def init_driver_with_cookies():
         {'name': 'IDE', 'value': 'AHWqTUkYcnP5qWuWeCec2kArikuNMa6qaPwJ2c68Kagkr3n2H18L2tuGY4PWYosE', 'domain': '.doubleclick.net', 'path': '/'},
         {'name': 'UUID', 'value': 'ec209aeb-1283-55ad-8a81-96a2cf31b0b6', 'domain': '.srvd2204.com', 'path': '/'},
         {'name': '_ga', 'value': 'GA1.1.1605079928.1743259499', 'domain': '.viks.tv', 'path': '/'},
+        {'name': '_ga_R7QX8XTHDP', 'value': 'GS1.1.1743260102.1.0.1743260102.0.0.0', 'domain': '.viks.tv', 'path': '/'},
         {'name': 'csc', 'value': '913-1743345893366-781-1--', 'domain': '.srvd2204.com', 'path': '/'},
-        {'name': 'ec_v50fr', 'value': '56cdbf5fbe1545fee8326434e5daf21f', 'domain': 'ip.viks.tv', 'path': '/'}
+        {'name': 'ec_v50fr', 'value': '56cdbf5fbe1545fee8326434e5daf21f', 'domain': 'ip.viks.tv', 'path': '/'},
+        {'name': 'receive-cookie-deprecation', 'value': '1', 'domain': '.doubleclick.net', 'path': '/'},
+        {'name': 'test_cookie', 'value': 'CheckForPermission', 'domain': '.doubleclick.net', 'path': '/'},
+        {'name': 'ucv', 'value': '927-UA-1743346496740-24--', 'domain': '.srvd2204.com', 'path': '/'}
     ]
 
     # Добавляем cookies для каждого домена, но только после загрузки страницы
