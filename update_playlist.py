@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
@@ -11,14 +11,22 @@ import base64
 def init_driver():
     options = Options()
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
-    
-    # Установить заголовки
     options.add_argument("User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0")
     options.add_argument("Referer=http://ip.viks.tv/")
     options.add_argument("Origin=http://ip.viks.tv/")
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
+
+# Получаем cookies и другие заголовки из браузера
+def get_cookies_and_headers(driver):
+    cookies = driver.get_cookies()
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0',
+        'Referer': 'http://ip.viks.tv/',
+        'Origin': 'http://ip.viks.tv/'
+    }
+    return cookies, headers
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
@@ -73,33 +81,32 @@ def update_playlist(video_url):
     else:
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
+# Основной процесс
 def main():
     driver = init_driver()
-
     try:
+        # Открываем страницу
         channel_url = "http://ip.viks.tv/114427-22-tv.html"
         driver.get(channel_url)
         driver.implicitly_wait(10)
 
-        # Получаем cookies из Selenium
-        cookies = driver.get_cookies()
-        
-        # Создаем сессию requests
-        session = requests.Session()
-        
-        # Добавляем cookies в сессию
-        for cookie in cookies:
-            session.cookies.set(cookie['name'], cookie['value'])
+        # Получаем cookies и заголовки
+        cookies, headers = get_cookies_and_headers(driver)
 
         # Находим тег <video> и извлекаем атрибут 'src'
         video_tag = driver.find_element(By.TAG_NAME, 'video')
         video_src = video_tag.get_attribute('src') if video_tag else None
-
+        
         if video_src:
             print(f"Video URL: {video_src}")
             
-            # Делаем запрос с сессией и получаем контент
-            response = session.get(video_src)
+            # Создаем сессию с cookies
+            session = requests.Session()
+            for cookie in cookies:
+                session.cookies.set(cookie['name'], cookie['value'])
+            
+            # Выполняем запрос с сессией и заголовками
+            response = session.get(video_src, headers=headers)
             if response.status_code == 200:
                 print("Видео доступно.")
                 update_playlist(video_src)
@@ -116,6 +123,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
