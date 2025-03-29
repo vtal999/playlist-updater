@@ -1,8 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
@@ -16,10 +14,9 @@ def init_driver():
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
 
     # Включаем DevTools Protocol и логи
-    caps = DesiredCapabilities.CHROME
-    caps['goog:loggingPrefs'] = {'performance': 'ALL'}  # Включаем все логи производительности
+    options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})  # Включаем все логи производительности
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options, desired_capabilities=caps)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
 
 # Функция для извлечения URL видео из логов сети
@@ -116,6 +113,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
