@@ -49,7 +49,16 @@ def get_video_url(driver):
         return video_url
     else:
         print("Не удалось найти ссылку на видео.")
-        return None
+        
+        # Альтернативный способ - попробуем найти URL через iframe или другие элементы на странице
+        try:
+            iframe = driver.find_element(By.TAG_NAME, "iframe")
+            iframe_src = iframe.get_attribute("src")
+            print(f"Найден iframe с URL: {iframe_src}")
+            return iframe_src
+        except Exception as e:
+            print(f"Не удалось найти iframe: {e}")
+            return None
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
