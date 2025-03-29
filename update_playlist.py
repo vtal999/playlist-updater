@@ -12,10 +12,10 @@ def init_driver_with_cookies():
     options.add_argument("--headless")  # Запуск без интерфейса
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-    # Открываем страницу, чтобы установить cookies
-    driver.get("http://ip.viks.tv/114427-22-tv.html")
+    # Открываем страницу, которая будет соответствовать домену cookies
+    driver.get("https://ip.viks.tv/")  # Открываем страницу на нужном домене для добавления cookies
 
-    # Пример добавления cookies
+    # Пример добавления cookies (они должны быть для правильного домена)
     cookies = [
         {'name': 'IDE', 'value': 'AHWqTUkYcnP5qWuWeCec2kArikuNMa6qaPwJ2c68Kagkr3n2H18L2tuGY4PWYosE', 'domain': '.doubleclick.net', 'path': '/'},
         {'name': 'UUID', 'value': 'ec209aeb-1283-55ad-8a81-96a2cf31b0b6', 'domain': '.srvd2204.com', 'path': '/'},
@@ -24,8 +24,11 @@ def init_driver_with_cookies():
         {'name': 'ec_v50fr', 'value': '56cdbf5fbe1545fee8326434e5daf21f', 'domain': 'ip.viks.tv', 'path': '/'}
     ]
 
+    # Добавляем cookies для каждого домена
     for cookie in cookies:
-        driver.add_cookie(cookie)  # Добавляем каждый cookie
+        driver.add_cookie(cookie)
+
+    driver.get("http://ip.viks.tv/114427-22-tv.html")  # Переходим на нужную страницу для продолжения работы
 
     driver.refresh()  # Обновляем страницу с установленными cookies
 
