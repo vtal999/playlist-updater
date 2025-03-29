@@ -1,6 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
@@ -21,8 +25,8 @@ def init_driver():
 
 # Функция для извлечения URL видео из логов сети
 def get_video_url_from_network(driver):
-    # Ждем, пока страница загрузится
-    time.sleep(10)  # Можно заменить на явное ожидание или метод, который будет проверять загрузку
+    # Ожидаем, что страница загрузится, и нужные данные появятся
+    WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))  # Подождем загрузки страницы
 
     # Сбор всех сетевых запросов
     performance_logs = driver.get_log('performance')
@@ -119,6 +123,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
