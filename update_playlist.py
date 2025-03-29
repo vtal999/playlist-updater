@@ -81,13 +81,30 @@ def main():
         driver.get(channel_url)
         driver.implicitly_wait(10)
 
+        # Получаем cookies из Selenium
+        cookies = driver.get_cookies()
+        
+        # Создаем сессию requests
+        session = requests.Session()
+        
+        # Добавляем cookies в сессию
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
+
         # Находим тег <video> и извлекаем атрибут 'src'
         video_tag = driver.find_element(By.TAG_NAME, 'video')
         video_src = video_tag.get_attribute('src') if video_tag else None
 
         if video_src:
             print(f"Video URL: {video_src}")
-            update_playlist(video_src)
+            
+            # Делаем запрос с сессией и получаем контент
+            response = session.get(video_src)
+            if response.status_code == 200:
+                print("Видео доступно.")
+                update_playlist(video_src)
+            else:
+                print(f"Ошибка при запросе видео: {response.status_code}")
         else:
             print("Не удалось найти тег <video> на странице.")
 
@@ -99,6 +116,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
