@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
@@ -10,6 +12,10 @@ import base64
 def init_driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0")
+    options.add_argument("referer=http://ip.viks.tv/")
+    options.add_argument("origin=http://ip.viks.tv/")
+
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
 
@@ -74,6 +80,9 @@ def main():
         driver.get(channel_url)
         driver.implicitly_wait(10)
 
+        # Дождаться, пока тег <video> станет доступным
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'video')))
+        
         # Находим тег <video> и извлекаем атрибут 'src'
         video_tag = driver.find_element(By.TAG_NAME, 'video')
         video_src = video_tag.get_attribute('src') if video_tag else None
