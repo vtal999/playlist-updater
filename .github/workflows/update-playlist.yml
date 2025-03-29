@@ -46,11 +46,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Передаем GITHUB_TOKEN в окружение
         run: |
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vtal999/playlist-updater.git  # Используем GITHUB_TOKEN для аутентификации
+          git push https://github.com/vtal999/playlist-updater.git  # Стандартный git push (GitHub автоматически использует GITHUB_TOKEN для аутентификации)
           
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
+
 
 
 
