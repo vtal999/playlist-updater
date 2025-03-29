@@ -43,6 +43,10 @@ def get_video_url_from_network(driver):
             start_index = message.find("https://s.viks.tv")
             end_index = message.find("m3u8") + 4
             video_url = message[start_index:end_index]
+            
+            # Выводим ссылку на видео
+            print(f"Найденная ссылка на видео: {video_url}")
+            
             return video_url
     return None
 
