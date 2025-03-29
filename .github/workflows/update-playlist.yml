@@ -28,10 +28,6 @@ jobs:
           git config --global user.email "you@example.com"  # Укажите свой email
           git config --global user.name "Your Name"  # Укажите свое имя
 
-      - name: Set environment variable for GITHUB_TOKEN
-        run: |
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV  # Устанавливаем переменную GITHUB_TOKEN
-
       - name: Update playlist with new token
         run: |
           echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"  # Проверим доступность токена
@@ -40,6 +36,10 @@ jobs:
       - name: Check for changes before pushing
         run: |
           git diff  # Проверяем изменения
+
+      - name: Pull the latest changes from the remote
+        run: |
+          git pull origin main --rebase  # Тянем последние изменения, чтобы избежать конфликтов
 
       - name: Force add the playlist file
         run: |
@@ -50,6 +50,7 @@ jobs:
       - name: Check playlist file contents before and after
         run: |
           cat playlist.m3u  # Печать содержимого файла для проверки
+
 
 
 
