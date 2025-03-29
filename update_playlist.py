@@ -58,7 +58,12 @@ if video_tag:
         github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
         print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
 
-        headers = {"Authorization": f"token {github_token}"}
+        headers = {
+            "Authorization": f"token {github_token}",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0",
+            "Referer": "http://ip.viks.tv/"
+        }
+        
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
         # Получаем информацию о текущем файле, чтобы обновить его
