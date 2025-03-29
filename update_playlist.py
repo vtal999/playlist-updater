@@ -12,10 +12,10 @@ def init_driver_with_cookies():
     options.add_argument("--headless")  # Запуск без интерфейса
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-    # Открываем страницу на домене для cookies
-    driver.get("http://ip.viks.tv/114427-22-tv.html")  # Открываем домен viks.tv перед добавлением cookies
+    # Загружаем страницу на домене для cookies
+    driver.get("http://viks.tv/")  # Загружаем основной домен для cookies
 
-    # Пример добавления cookies (они должны быть для правильного домена)
+    # Пример добавления cookies для нескольких доменов
     cookies = [
         {'name': 'IDE', 'value': 'AHWqTUkYcnP5qWuWeCec2kArikuNMa6qaPwJ2c68Kagkr3n2H18L2tuGY4PWYosE', 'domain': '.doubleclick.net', 'path': '/'},
         {'name': 'UUID', 'value': 'ec209aeb-1283-55ad-8a81-96a2cf31b0b6', 'domain': '.srvd2204.com', 'path': '/'},
@@ -27,12 +27,14 @@ def init_driver_with_cookies():
         {'name': 'test_cookie', 'value': 'CheckForPermission', 'domain': '.doubleclick.net', 'path': '/'},
         {'name': 'ucv', 'value': '927-UA-1743346496740-24--', 'domain': '.srvd2204.com', 'path': '/'}
     ]
-
-    # Добавляем cookies для каждого домена, но только после загрузки страницы
+    
+    # Для каждого домена загружаем соответствующую страницу и добавляем cookies
     for cookie in cookies:
-        driver.add_cookie(cookie)
+        # Переходим на домен перед добавлением cookie
+        driver.get(f"http://{cookie['domain']}")  # Загружаем соответствующий домен
+        driver.add_cookie(cookie)  # Добавляем cookie для этого домена
 
-    # После добавления cookies, переходим на нужную страницу для продолжения работы
+    # Теперь переходим на целевую страницу, где нужно парсить видео
     driver.get("http://ip.viks.tv/114427-22-tv.html")  # Переход на страницу с видео
     driver.refresh()  # Обновляем страницу с установленными cookies
 
