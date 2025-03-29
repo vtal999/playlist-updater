@@ -1,40 +1,17 @@
-from seleniumwire import webdriver  # Импортируем webdriver из seleniumwire
+from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
 import base64
-import time
 
-# Функция для инициализации драйвера с DevTools
+# Функция для инициализации драйвера
 def init_driver():
-    # Настройка опций для Chrome
-    options = Options()
+    options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
-
-    # Создаём драйвер с использованием selenium-wire
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
-    # Возвращаем драйвер
     return driver
-
-# Функция для перехвата сетевых запросов
-def capture_network_requests(driver):
-    # Слушаем все сетевые запросы
-    driver.get("http://ip.viks.tv/114427-22-tv.html")  # Загружаем нужную страницу
-    
-    # Ждем несколько секунд, чтобы данные успели загрузиться
-    time.sleep(10)
-    
-    # Перебираем все запросы
-    for request in driver.requests:
-        # Проверяем, что запрос содержит m3u8 и с правильным доменом
-        if 's.viks.tv' in request.url and 'm3u8' in request.url:
-            print(f"Найденный m3u8 URL: {request.url}")
-            return request.url  # Возвращаем найденный URL
-
-    return None  # Если не нашли m3u8 ссылку
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
@@ -93,13 +70,19 @@ def main():
     driver = init_driver()
 
     try:
-        video_url = capture_network_requests(driver)
+        channel_url = "http://ip.viks.tv/114427-22-tv.html"
+        driver.get(channel_url)
+        driver.implicitly_wait(10)
 
-        if video_url:
-            print(f"Найден видео URL: {video_url}")
-            update_playlist(video_url)
+        # Находим тег <video> и извлекаем атрибут 'src'
+        video_tag = driver.find_element(By.TAG_NAME, 'video')
+        video_src = video_tag.get_attribute('src') if video_tag else None
+
+        if video_src:
+            print(f"Video URL: {video_src}")
+            update_playlist(video_src)
         else:
-            print("Не удалось найти видео-ссылку в логах сети.")
+            print("Не удалось найти тег <video> на странице.")
 
     except Exception as e:
         print(f"Произошла ошибка: {e}")
@@ -109,28 +92,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
