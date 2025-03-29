@@ -54,9 +54,11 @@ if video_tag:
         file_path = "playlist.m3u"
         branch = "main"
         
-        # Получаем токен GITHUB_TOKEN из переменной окружения
-        github_token = os.getenv("GITHUB_TOKEN")  # Используем GITHUB_TOKEN, передаваемый GitHub Actions
-        print(f"GITHUB_TOKEN: {github_token}")  # Добавлено для отладки
+        github_token = os.getenv("GITHUB_TOKEN")
+        if not github_token:
+            print("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
+            driver.quit()
+            exit(1)
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
@@ -66,9 +68,12 @@ if video_tag:
         if response.status_code == 200:
             file_data = response.json()
             sha = file_data.get("sha", "")
+        elif response.status_code == 404:
+            sha = ""
         else:
             print(f"Ошибка при получении информации о файле: {response.text}")
-            sha = ""
+            driver.quit()
+            exit(1)
 
         # Кодируем содержимое плейлиста в base64
         encoded_content = base64.b64encode(playlist_content.encode()).decode()
@@ -93,6 +98,8 @@ else:
 
 # Закрываем драйвер
 driver.quit()
+
+
 
 
 
