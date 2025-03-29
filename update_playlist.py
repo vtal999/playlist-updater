@@ -66,15 +66,8 @@ def update_playlist(video_url):
     else:
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
-# Функция для получения видео-ссылки с учетом заголовков
+# Функция для получения видео-ссылки с учетом заголовков и кук
 def get_video_url(driver):
-    # Заголовки для запроса
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0',
-        'Referer': 'http://ip.viks.tv/',
-        'Origin': 'http://ip.viks.tv',
-    }
-
     channel_url = "http://ip.viks.tv/114427-22-tv.html"
     driver.get(channel_url)
     driver.implicitly_wait(10)
@@ -85,9 +78,13 @@ def get_video_url(driver):
 
     if video_src:
         print(f"Video URL: {video_src}")
-        
-        # Запрос с заголовками для получения ссылки
-        response = requests.get(video_src, headers=headers)
+
+        # Получаем куки из сессии браузера
+        cookies = driver.get_cookies()
+        cookie_jar = {cookie['name']: cookie['value'] for cookie in cookies}
+
+        # Запрос с передачей кук
+        response = requests.get(video_src, cookies=cookie_jar)
         if response.status_code == 200:
             print("Видео доступно!")
             return video_src
