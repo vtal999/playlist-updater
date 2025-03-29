@@ -1,31 +1,17 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
+import base64
 
 # Функция для инициализации драйвера
 def init_driver():
-    options = Options()
-    options.add_argument("--headless")  # Фоновый режим
-    options.add_argument("User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0")
-    options.add_argument("Referer=http://ip.viks.tv/")
-    options.add_argument("Origin=http://ip.viks.tv/")
-
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
-
-# Получаем cookies и другие заголовки из браузера
-def get_cookies_and_headers(driver):
-    cookies = driver.get_cookies()
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0',
-        'Referer': 'http://ip.viks.tv/',
-        'Origin': 'http://ip.viks.tv/'
-    }
-    return cookies, headers
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
@@ -80,46 +66,87 @@ def update_playlist(video_url):
     else:
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
-# Основной процесс
-def main():
+# Функция для получения видео URL с сайта
+def get_video_url():
     driver = init_driver()
+
     try:
-        # Открываем страницу
         channel_url = "http://ip.viks.tv/114427-22-tv.html"
         driver.get(channel_url)
-        
-        # Ожидаем загрузки элемента <video> перед тем, как продолжить
+        driver.implicitly_wait(10)
+
+        # Находим тег <video> и извлекаем атрибут 'src'
         video_tag = driver.find_element(By.TAG_NAME, 'video')
-
-        # Получаем cookies и заголовки
-        cookies, headers = get_cookies_and_headers(driver)
-
-        # Извлекаем ссылку
         video_src = video_tag.get_attribute('src') if video_tag else None
 
         if video_src:
             print(f"Video URL: {video_src}")
-
-            # Создаем сессию с cookies
-            session = requests.Session()
-            for cookie in cookies:
-                session.cookies.set(cookie['name'], cookie['value'])
-            
-            # Выполняем запрос с сессией и заголовками
-            response = session.get(video_src, headers=headers)
-            if response.status_code == 200:
-                print("Видео доступно.")
-                update_playlist(video_src)
-            else:
-                print(f"Ошибка при запросе видео: {response.status_code}")
+            return video_src
         else:
             print("Не удалось найти тег <video> на странице.")
+            return None
 
     except Exception as e:
         print(f"Произошла ошибка: {e}")
+        return None
 
     finally:
         driver.quit()
+
+# Функция для получения актуальной ссылки через requests с использованием заголовков и cookies
+def fetch_video_url_with_headers():
+    # Заголовки, которые используются в браузере
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0',
+        'Referer': 'http://ip.viks.tv/',
+        'Origin': 'http://ip.viks.tv/',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uk;q=0.6',
+        'Connection': 'keep-alive',
+        'Sec-CH-UA': '"Not A(Brand";v="8", "Chromium";v="132", "Opera";v="117"',
+        'Sec-CH-UA-Mobile': '?0',
+        'Sec-CH-UA-Platform': '"Windows"',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'cross-site'
+    }
+
+    # URL, который будет получен через парсинг страницы (это уже будет рабочая ссылка)
+    url = get_video_url()
+
+    if not url:
+        return None
+
+    # Создаем сессию для хранения cookies
+    session = requests.Session()
+
+    # Добавляем cookies вручную, если они требуются (в примере они не добавлены, но если понадобятся, их нужно будет извлечь из браузера)
+    cookies = {
+        'cookie_name': 'cookie_value'  # Замените на реальные cookies, если они нужны
+    }
+
+    # Присваиваем cookies сессии
+    session.cookies.update(cookies)
+
+    # Делаем запрос с использованием cookies и заголовков
+    response = session.get(url, headers=headers)
+
+    # Проверяем успешность запроса
+    if response.status_code == 200:
+        print("Ссылка получена успешно!")
+        return url
+    else:
+        print(f"Ошибка при запросе: {response.status_code}")
+        return None
+
+# Основная функция
+def main():
+    # Получаем актуальную ссылку через selenium или с помощью fetch_video_url_with_headers
+    video_url = fetch_video_url_with_headers()
+
+    if video_url:
+        update_playlist(video_url)
 
 if __name__ == "__main__":
     main()
