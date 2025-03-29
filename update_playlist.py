@@ -1,56 +1,33 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
 import base64
-import time
 
-# Функция для инициализации драйвера
 def init_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
-    capabilities = DesiredCapabilities.CHROME
-    capabilities["goog:loggingPrefs"] = {"performance": "ALL"}  # Включаем логи performance
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
 
-# Функция для поиска index.m3u8 в XHR-запросах
-def get_m3u8_url(driver):
-    channel_url = "http://ip.viks.tv/114427-22-tv.html"
-    driver.get(channel_url)
-    time.sleep(5)  # Ждём загрузку
-    
-    logs = driver.get_log("performance")
-    for log in logs:
-        log_json = eval(log["message"])  # Преобразуем в словарь
-        if "params" in log_json["message"] and "request" in log_json["message"]["params"]:
-            request = log_json["message"]["params"]["request"]
-            url = request.get("url", "")
-            if "index.m3u8" in url:
-                print(f"Найдена ссылка на поток: {url}")
-                return url
-    
-    print("Не удалось найти ссылку .m3u8 в XHR-запросах.")
-    return None
-
-# Функция для обновления плейлиста
 def update_playlist(video_url):
     playlist_path = 'playlist.m3u'
+    new_url = video_url
     print(f"Updating playlist at: {playlist_path}")
     
     with open(playlist_path, 'w') as file:
-        file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{video_url}\n")
+        file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_url}\n")
 
-    # Выводим содержимое файла для проверки
     with open(playlist_path, 'r') as file:
         playlist_content = file.read()
         print("Содержимое файла playlist.m3u после обновления:")
         print(playlist_content)
 
-    # === Обновление файла через GitHub API ===
     repo_owner = "vtal999"
     repo_name = "playlist-updater"
     file_path = "playlist.m3u"
@@ -71,7 +48,6 @@ def update_playlist(video_url):
     elif response.status_code != 404:
         raise Exception(f"Ошибка при получении информации о файле: {response.text}")
 
-    # Кодируем содержимое плейлиста в base64
     encoded_content = base64.b64encode(playlist_content.encode()).decode()
 
     data = {
@@ -88,10 +64,35 @@ def update_playlist(video_url):
     else:
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
+def get_video_url(driver):
+    channel_url = "http://ip.viks.tv/114427-22-tv.html"
+    driver.get(channel_url)
+    driver.implicitly_wait(10)
+
+    video_elements = driver.find_elements(By.TAG_NAME, 'video')
+    if video_elements:
+        video_src = video_elements[0].get_attribute('src')
+        print(f"Video URL: {video_src}")
+        
+        cookies = driver.get_cookies()
+        cookie_jar = {cookie['name']: cookie['value'] for cookie in cookies}
+        
+        response = requests.get(video_src, cookies=cookie_jar)
+        if response.status_code == 200:
+            print("Видео доступно!")
+            return video_src
+        else:
+            print("Не удалось получить видео.")
+            return None
+    else:
+        print("Не найден тег <video> на странице.")
+        return None
+
 def main():
     driver = init_driver()
+
     try:
-        video_url = get_m3u8_url(driver)
+        video_url = get_video_url(driver)
         if video_url:
             update_playlist(video_url)
         else:
