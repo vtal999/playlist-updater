@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
@@ -48,17 +47,8 @@ def get_video_url(driver):
         print(f"Video URL: {video_url}")
         return video_url
     else:
-        print("Не удалось найти ссылку на видео.")
-        
-        # Альтернативный способ - попробуем найти iframe и получить src
-        try:
-            iframe = driver.find_element(By.TAG_NAME, "iframe")
-            iframe_src = iframe.get_attribute("src")
-            print(f"Найден iframe с URL: {iframe_src}")
-            return iframe_src
-        except Exception as e:
-            print(f"Не удалось найти iframe: {e}")
-            return None
+        print("Не удалось найти ссылку на видео в сетевых запросах.")
+        return None
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
