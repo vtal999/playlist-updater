@@ -10,6 +10,7 @@ import requests
 import os
 import base64
 import time
+import json
 
 # Функция для инициализации драйвера с DevTools
 def init_driver():
@@ -17,38 +18,36 @@ def init_driver():
     options = Options()
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
 
-    # Включаем DevTools Protocol и логи
-    options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})  # Включаем все логи производительности
-
+    # Включаем DevTools Protocol
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+    # Подключаем к DevTools
+    driver.execute_cdp_cmd('Network.enable', {})
+    
     return driver
 
-# Функция для извлечения URL видео из логов сети
+# Функция для извлечения URL видео из сетевых запросов
 def get_video_url_from_network(driver):
-    # Ожидаем, что страница загрузится, и нужные данные появятся
+    # Ожидаем, что страница загрузится
     WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))  # Подождем загрузки страницы
 
-    # Сбор всех сетевых запросов
-    performance_logs = driver.get_log('performance')
-    
-    # Выводим все логи для отладки
-    for entry in performance_logs:
-        print(entry)  # Выводим каждый лог для отладки
+    video_url = None
 
-    # Ищем URL, который содержит "m3u8"
-    for entry in performance_logs:
-        message = entry['message']
-        if 'https://s.viks.tv' in message and '.m3u8' in message:
-            # Извлекаем нужный URL
-            start_index = message.find("https://s.viks.tv")
-            end_index = message.find(".m3u8") + 5
-            video_url = message[start_index:end_index]
-            
-            # Выводим ссылку на видео
-            print(f"Найденная ссылка на видео: {video_url}")
-            
-            return video_url
-    return None
+    # Слушаем сетевые запросы
+    def intercept_request(request):
+        nonlocal video_url
+        # Фильтруем запросы, ищем ссылку на m3u8
+        if 's.viks.tv' in request['response']['url'] and '.m3u8' in request['response']['url']:
+            video_url = request['response']['url']
+            print(f"Найденный видео-URL: {video_url}")
+    
+    # Подключаем обработчик запросов
+    driver.request_interceptor = intercept_request
+
+    # Ожидаем, что запросы будут обработаны
+    time.sleep(10)  # Подождем немного, чтобы запросы успели пройти
+
+    return video_url
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
