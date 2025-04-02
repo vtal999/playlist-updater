@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
 import base64
+import re
 
 # Функция для инициализации драйвера
 def init_driver():
@@ -68,7 +69,13 @@ def update_playlist(video_urls):
     else:
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
-# Функция для получения видео URL с проверки на <source>
+# Функция для очистки URL от ненужного параметра
+def clean_video_url(video_url):
+    # Удаляем параметр "&remote=91.214.138.236" если он присутствует
+    cleaned_url = re.sub(r"&remote=[^&]+", "", video_url)
+    return cleaned_url
+
+# Функция для получения видео URL с проверкой на <source>
 def get_video_url(driver, channel_url):
     driver.get(channel_url)
     driver.implicitly_wait(10)
@@ -86,8 +93,10 @@ def get_video_url(driver, channel_url):
             video_src = video_tag.get_attribute('src')
         
         if video_src:
-            print(f"Video URL для {channel_url}: {video_src}")
-            return video_src
+            # Очищаем URL от ненужного параметра
+            cleaned_video_src = clean_video_url(video_src)
+            print(f"Video URL для {channel_url}: {cleaned_video_src}")
+            return cleaned_video_src
     else:
         print(f"Не удалось найти тег <video> на странице {channel_url}.")
     return None
