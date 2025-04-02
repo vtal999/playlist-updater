@@ -14,14 +14,15 @@ def init_driver():
     return driver
 
 # Функция для обновления плейлиста
-def update_playlist(video_url):
+def update_playlist(video_urls):
     playlist_path = 'playlist.m3u'
-    new_url = video_url
     print(f"Updating playlist at: {playlist_path}")
-    
-    # Указываем кодировку UTF-8 при записи в файл
+
+    # Обновляем плейлист для каждого канала
     with open(playlist_path, 'w', encoding='utf-8') as file:
-        file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_url}\n")
+        file.write("#EXTM3U\n")
+        for channel_name, video_url in video_urls.items():
+            file.write(f"#EXTINF:-1, {channel_name}\n{video_url}\n")
 
     # Выводим содержимое файла для проверки
     with open(playlist_path, 'r', encoding='utf-8') as file:
@@ -54,7 +55,7 @@ def update_playlist(video_url):
     encoded_content = base64.b64encode(playlist_content.encode('utf-8')).decode('utf-8')
 
     data = {
-        "message": "Update playlist with new token",
+        "message": "Update playlist with new tokens",
         "content": encoded_content,
         "sha": sha,
         "branch": branch
@@ -67,23 +68,41 @@ def update_playlist(video_url):
     else:
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
+def get_video_url(driver, channel_url):
+    driver.get(channel_url)
+    driver.implicitly_wait(10)
+
+    # Находим тег <video> и извлекаем атрибут 'src'
+    video_tag = driver.find_element(By.TAG_NAME, 'video')
+    video_src = video_tag.get_attribute('src') if video_tag else None
+
+    if video_src:
+        print(f"Video URL для {channel_url}: {video_src}")
+        return video_src
+    else:
+        print(f"Не удалось найти тег <video> на странице {channel_url}.")
+        return None
+
 def main():
     driver = init_driver()
 
     try:
-        channel_url = "http://ip.viks.tv/114427-22-tv.html"
-        driver.get(channel_url)
-        driver.implicitly_wait(10)
+        # Список каналов и их URL
+        channels = {
+            "Сапфир": "http://ip.viks.tv/114427-22-tv.html",
+            "НТВ": "http://ip.viks.tv/032117-stb.html",
+            # Добавьте другие каналы по аналогии
+        }
 
-        # Находим тег <video> и извлекаем атрибут 'src'
-        video_tag = driver.find_element(By.TAG_NAME, 'video')
-        video_src = video_tag.get_attribute('src') if video_tag else None
+        video_urls = {}
 
-        if video_src:
-            print(f"Video URL: {video_src}")
-            update_playlist(video_src)
-        else:
-            print("Не удалось найти тег <video> на странице.")
+        for channel_name, channel_url in channels.items():
+            video_url = get_video_url(driver, channel_url)
+            if video_url:
+                video_urls[channel_name] = video_url
+
+        if video_urls:
+            update_playlist(video_urls)
 
     except Exception as e:
         print(f"Произошла ошибка: {e}")
