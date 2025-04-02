@@ -10,85 +10,67 @@ import base64
 def init_driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
-    try:
-        print("Инициализация драйвера...")
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        print("Драйвер успешно инициализирован.")
-        return driver
-    except Exception as e:
-        print(f"Ошибка при инициализации драйвера: {e}")
-        raise
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    return driver
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
     playlist_path = 'playlist.m3u'
     new_url = video_url
     print(f"Updating playlist at: {playlist_path}")
-
-    try:
-        with open(playlist_path, 'w') as file:
-            file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_url}\n")
-
-        # Выводим содержимое файла для проверки
-        with open(playlist_path, 'r') as file:
-            playlist_content = file.read()
-            print("Содержимое файла playlist.m3u после обновления:")
-            print(playlist_content)
-
-        # === Обновление файла через GitHub API ===
-        repo_owner = "vtal999"
-        repo_name = "playlist-updater"
-        file_path = "playlist.m3u"
-        branch = "main"
-
-        github_token = os.getenv("GITHUB_TOKEN")
-        if not github_token:
-            print("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
-            raise EnvironmentError("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
-
-        print("Token найден, продолжаем обновление файла на GitHub.")
-
-        headers = {"Authorization": f"token {github_token}"}
-        url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
-
-        response = requests.get(url, headers=headers)
-        sha = ""
-        if response.status_code == 200:
-            file_data = response.json()
-            sha = file_data.get("sha", "")
-        elif response.status_code != 404:
-            print(f"Ошибка при получении информации о файле: {response.text}")
-            raise Exception(f"Ошибка при получении информации о файле: {response.text}")
-
-        # Кодируем содержимое плейлиста в base64
-        encoded_content = base64.b64encode(playlist_content.encode()).decode()
-
-        data = {
-            "message": "Update playlist with new token",
-            "content": encoded_content,
-            "sha": sha,
-            "branch": branch
-        }
-
-        response = requests.put(url, headers=headers, json=data)
-
-        if response.status_code in [200, 201]:
-            print("Файл успешно обновлен через GitHub API.")
-        else:
-            print(f"Ошибка при обновлении через API: {response.text}")
-            raise Exception(f"Ошибка при обновлении через API: {response.text}")
     
-    except Exception as e:
-        print(f"Произошла ошибка при обновлении плейлиста: {e}")
+    with open(playlist_path, 'w') as file:
+        file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_url}\n")
+
+    # Выводим содержимое файла для проверки
+    with open(playlist_path, 'r') as file:
+        playlist_content = file.read()
+        print("Содержимое файла playlist.m3u после обновления:")
+        print(playlist_content)
+
+    # === Обновление файла через GitHub API ===
+    repo_owner = "vtal999"
+    repo_name = "playlist-updater"
+    file_path = "playlist.m3u"
+    branch = "main"
+
+    github_token = os.getenv("GITHUB_TOKEN")
+    if not github_token:
+        raise EnvironmentError("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
+
+    headers = {"Authorization": f"token {github_token}"}
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
+
+    response = requests.get(url, headers=headers)
+    sha = ""
+    if response.status_code == 200:
+        file_data = response.json()
+        sha = file_data.get("sha", "")
+    elif response.status_code != 404:
+        raise Exception(f"Ошибка при получении информации о файле: {response.text}")
+
+    # Кодируем содержимое плейлиста в base64
+    encoded_content = base64.b64encode(playlist_content.encode()).decode()
+
+    data = {
+        "message": "Update playlist with new token",
+        "content": encoded_content,
+        "sha": sha,
+        "branch": branch
+    }
+
+    response = requests.put(url, headers=headers, json=data)
+
+    if response.status_code in [200, 201]:
+        print("Файл успешно обновлен через GitHub API.")
+    else:
+        raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
 def main():
-    driver = None
-    try:
-        print("Запуск функции инициализации драйвера...")
-        driver = init_driver()
+    driver = init_driver()
 
+    try:
         channel_url = "http://ip.viks.tv/114427-22-tv.html"
-        print(f"Открываю страницу: {channel_url}")
         driver.get(channel_url)
         driver.implicitly_wait(10)
 
@@ -106,12 +88,10 @@ def main():
         print(f"Произошла ошибка: {e}")
 
     finally:
-        if driver:
-            driver.quit()
+        driver.quit()
 
 if __name__ == "__main__":
     main()
-
 
 
 
