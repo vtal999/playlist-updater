@@ -11,8 +11,9 @@ def init_driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
     try:
+        print("Инициализация драйвера...")
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        print("Драйвер инициализирован успешно.")
+        print("Драйвер успешно инициализирован.")
         return driver
     except Exception as e:
         print(f"Ошибка при инициализации драйвера: {e}")
@@ -42,7 +43,10 @@ def update_playlist(video_url):
 
         github_token = os.getenv("GITHUB_TOKEN")
         if not github_token:
+            print("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
             raise EnvironmentError("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
+
+        print("Token найден, продолжаем обновление файла на GitHub.")
 
         headers = {"Authorization": f"token {github_token}"}
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
@@ -53,6 +57,7 @@ def update_playlist(video_url):
             file_data = response.json()
             sha = file_data.get("sha", "")
         elif response.status_code != 404:
+            print(f"Ошибка при получении информации о файле: {response.text}")
             raise Exception(f"Ошибка при получении информации о файле: {response.text}")
 
         # Кодируем содержимое плейлиста в base64
@@ -70,6 +75,7 @@ def update_playlist(video_url):
         if response.status_code in [200, 201]:
             print("Файл успешно обновлен через GitHub API.")
         else:
+            print(f"Ошибка при обновлении через API: {response.text}")
             raise Exception(f"Ошибка при обновлении через API: {response.text}")
     
     except Exception as e:
@@ -78,9 +84,11 @@ def update_playlist(video_url):
 def main():
     driver = None
     try:
+        print("Запуск функции инициализации драйвера...")
         driver = init_driver()
 
         channel_url = "http://ip.viks.tv/114427-22-tv.html"
+        print(f"Открываю страницу: {channel_url}")
         driver.get(channel_url)
         driver.implicitly_wait(10)
 
@@ -103,6 +111,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
