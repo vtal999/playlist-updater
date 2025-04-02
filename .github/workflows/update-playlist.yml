@@ -37,7 +37,12 @@ jobs:
       - name: Force add the playlist file and commit
         run: |
           git add -f playlist.m3u  # Принудительное добавление файла
-          git commit -m "Update playlist with new token" || echo "No changes to commit"  # Если изменений нет, пропускаем
+          git commit -m "Update playlist with new token"
+          if ($?) {  # Проверка, если коммит прошел успешно
+            echo "Changes committed successfully."
+          } else {
+            echo "No changes to commit."
+          }
 
       - name: Push changes
         run: |
