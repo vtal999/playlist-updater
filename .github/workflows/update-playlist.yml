@@ -30,7 +30,7 @@ jobs:
 
       - name: Update playlist with new token
         run: |
-          env GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}  # Передаем токен в окружение
+          $env:GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"  # Передаем токен в окружение для PowerShell
           python3 update_playlist.py  # Запуск скрипта
 
       - name: Force add the playlist file and commit
