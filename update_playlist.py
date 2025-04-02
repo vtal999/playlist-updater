@@ -68,20 +68,29 @@ def update_playlist(video_urls):
     else:
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
+# Функция для получения видео URL с проверки на <source>
 def get_video_url(driver, channel_url):
     driver.get(channel_url)
     driver.implicitly_wait(10)
 
-    # Находим тег <video> и извлекаем атрибут 'src'
+    # Находим тег <video> и проверяем наличие внутри него <source>
     video_tag = driver.find_element(By.TAG_NAME, 'video')
-    video_src = video_tag.get_attribute('src') if video_tag else None
-
-    if video_src:
-        print(f"Video URL для {channel_url}: {video_src}")
-        return video_src
+    if video_tag:
+        # Проверяем наличие тега <source> внутри тега <video>
+        source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
+        if source_tag:
+            # Если <source> найден, берем src из него
+            video_src = source_tag[0].get_attribute('src') if source_tag else None
+        else:
+            # Если <source> нет, берем src из самого тега <video>
+            video_src = video_tag.get_attribute('src')
+        
+        if video_src:
+            print(f"Video URL для {channel_url}: {video_src}")
+            return video_src
     else:
         print(f"Не удалось найти тег <video> на странице {channel_url}.")
-        return None
+    return None
 
 def main():
     driver = init_driver()
