@@ -19,11 +19,12 @@ def update_playlist(video_url):
     new_url = video_url
     print(f"Updating playlist at: {playlist_path}")
     
-    with open(playlist_path, 'w') as file:
+    # Указываем кодировку UTF-8 при записи в файл
+    with open(playlist_path, 'w', encoding='utf-8') as file:
         file.write(f"#EXTM3U\n#EXTINF:-1, Сапфир\n{new_url}\n")
 
     # Выводим содержимое файла для проверки
-    with open(playlist_path, 'r') as file:
+    with open(playlist_path, 'r', encoding='utf-8') as file:
         playlist_content = file.read()
         print("Содержимое файла playlist.m3u после обновления:")
         print(playlist_content)
@@ -50,7 +51,7 @@ def update_playlist(video_url):
         raise Exception(f"Ошибка при получении информации о файле: {response.text}")
 
     # Кодируем содержимое плейлиста в base64
-    encoded_content = base64.b64encode(playlist_content.encode()).decode()
+    encoded_content = base64.b64encode(playlist_content.encode('utf-8')).decode('utf-8')
 
     data = {
         "message": "Update playlist with new token",
