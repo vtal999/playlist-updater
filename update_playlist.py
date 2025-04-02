@@ -91,6 +91,9 @@ def main():
         channels = {
             "Сапфир": "http://ip.viks.tv/114427-22-tv.html",
             "НТВ": "http://ip.viks.tv/032117-stb.html",
+            "Первый канал": "http://ip.viks.tv/021612-pervyy-kanal.html",
+            "Россия 1": "http://ip.viks.tv/031327-rossiya1_tv.html",
+            "Россия 24": "http://ip.viks.tv/126307-rossiya_24_tv.html",
             # Добавьте другие каналы по аналогии
         }
 
