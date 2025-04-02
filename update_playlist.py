@@ -6,45 +6,12 @@ import requests
 import os
 import base64
 
-# Функция для инициализации драйвера с cookies
-def init_driver_with_cookies():
+# Функция для инициализации драйвера
+def init_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Запуск без интерфейса
+    options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
-    # Загружаем страницу на домене для cookies
-    driver.get("http://viks.tv/")  # Загружаем основной домен для cookies
-
-    # Пример добавления cookies для нескольких доменов
-    cookies = [
-        {'name': 'IDE', 'value': 'AHWqTUkYcnP5qWuWeCec2kArikuNMa6qaPwJ2c68Kagkr3n2H18L2tuGY4PWYosE', 'domain': '.doubleclick.net', 'path': '/'},
-        {'name': 'UUID', 'value': 'ec209aeb-1283-55ad-8a81-96a2cf31b0b6', 'domain': '.srvd2204.com', 'path': '/'},
-        {'name': '_ga', 'value': 'GA1.1.1605079928.1743259499', 'domain': '.viks.tv', 'path': '/'},
-        {'name': '_ga_R7QX8XTHDP', 'value': 'GS1.1.1743260102.1.0.1743260102.0.0.0', 'domain': '.viks.tv', 'path': '/'},
-        {'name': 'csc', 'value': '913-1743345893366-781-1--', 'domain': '.srvd2204.com', 'path': '/'},
-        {'name': 'ec_v50fr', 'value': '56cdbf5fbe1545fee8326434e5daf21f', 'domain': 'ip.viks.tv', 'path': '/'},
-        {'name': 'receive-cookie-deprecation', 'value': '1', 'domain': '.doubleclick.net', 'path': '/'},
-        {'name': 'test_cookie', 'value': 'CheckForPermission', 'domain': '.doubleclick.net', 'path': '/'},
-        {'name': 'ucv', 'value': '927-UA-1743346496740-24--', 'domain': '.srvd2204.com', 'path': '/'}
-    ]
-    
-    # Для каждого домена загружаем соответствующую страницу и добавляем cookies
-    for cookie in cookies:
-        # Переходим на домен перед добавлением cookie
-        driver.get(f"http://{cookie['domain']}")  # Загружаем соответствующий домен
-        driver.add_cookie(cookie)  # Добавляем cookie для этого домена
-
-    # Теперь переходим на целевую страницу, где нужно парсить видео
-    driver.get("http://ip.viks.tv/114427-22-tv.html")  # Переход на страницу с видео
-    driver.refresh()  # Обновляем страницу с установленными cookies
-
     return driver
-
-# Функция для получения ссылки на видео
-def get_video_url(driver):
-    video_tag = driver.find_element(By.TAG_NAME, 'video')
-    video_url = video_tag.get_attribute('src') if video_tag else None
-    return video_url
 
 # Функция для обновления плейлиста
 def update_playlist(video_url):
@@ -100,18 +67,23 @@ def update_playlist(video_url):
         raise Exception(f"Ошибка при обновлении через API: {response.text}")
 
 def main():
-    driver = init_driver_with_cookies()
+    driver = init_driver()
 
     try:
-        # Получаем ссылку на видео
-        video_url = get_video_url(driver)
-        
-        if video_url:
-            print(f"Video URL: {video_url}")
-            update_playlist(video_url)
+        channel_url = "http://ip.viks.tv/114427-22-tv.html"
+        driver.get(channel_url)
+        driver.implicitly_wait(10)
+
+        # Находим тег <video> и извлекаем атрибут 'src'
+        video_tag = driver.find_element(By.TAG_NAME, 'video')
+        video_src = video_tag.get_attribute('src') if video_tag else None
+
+        if video_src:
+            print(f"Video URL: {video_src}")
+            update_playlist(video_src)
         else:
             print("Не удалось найти тег <video> на странице.")
-    
+
     except Exception as e:
         print(f"Произошла ошибка: {e}")
 
