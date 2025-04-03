@@ -16,7 +16,8 @@ def get_video_url(channel_name, channel_url, existing_urls):
         response.raise_for_status()
         
         # Ищем ссылку на поток
-        match = re.search(r'(https?://[^"]+\.m3u8[^"]*)', response.text)
+        match = re.search(r'(https?://[^"]+\.(m3u8|mp4)[^"]*)', response.text)
+
         if match:
             video_src = match.group(1)
             # Убираем часть после &remote=
