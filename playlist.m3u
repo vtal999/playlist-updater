@@ -1,15 +1,17 @@
 #EXTM3U
+#EXTINF:-1, Сапфир
+https://server5.musical.uz/saphir/index.m3u8?token=36ef386e81acd06620fd831bbd457aab5a0e5379-f0c2a0d0bf670b3f2c9ab0afb73e8a99-1743675488-1743664688
 #EXTINF:-1, 2+2
-https://s.viks.tv/238/index.m3u8?k=1743682752p632i831i412i19Sd5cc4b38bb33ce461306e11c8d935026
+https://s.viks.tv/238/index.m3u8?k=1743682988p632i831i412i19Sb586ba74048bba0cd97b17633e25d1de
 #EXTINF:-1, СТБ
-https://s.viks.tv/101/index.m3u8?k=1743682751p632i831i412i19S23997ad4bbcaa0ff7c8cdd4ea9f9d511
+https://s.viks.tv/101/index.m3u8?k=1743682988p632i831i412i19Sf3d4fe85708a883053cf3a6c9936e1cf
 #EXTINF:-1, Первый канал
-https://s.viks.tv/540/index.m3u8?k=1743682751p632i831i412i19S2d448f527a95e73111ebb6e8958540e8
+https://s.viks.tv/540/index.m3u8?k=1743683021p632i831i412i19Sf8488db71784e374b00e40fb3453cf3f
 #EXTINF:-1, Россия 1
-https://s.viks.tv/544/index.m3u8?k=1743682777p632i831i412i19S246c5ecce1ea871dccae07ebd2ae2907
+https://s.viks.tv/544/index.m3u8?k=1743683022p632i831i412i19Sa80e04701236df633640de8694cd776f
 #EXTINF:-1, Россия 24
-https://s.viks.tv/563/index.m3u8?k=1743682787p632i831i412i19Se9763db6c275f5799864d0ceef91d195
+https://s.viks.tv/563/index.m3u8?k=1743683043p632i831i412i19S53b6de0fe1603f20c8bbb16cd3ec8784
 #EXTINF:-1, НСТ
-https://s.viks.tv/127/index.m3u8?k=1743682789p632i831i412i19Sed310a40b73a2b110549804d1dc59fc6
+https://s.viks.tv/127/index.m3u8?k=1743683063p632i831i412i19S828281e020ad27648621d20f38ee50f2
 #EXTINF:-1, Кинохит
-https://s.viks.tv/200/index.m3u8?k=1743682815p632i831i412i19S0b66f7d539e7e0c7378658ea9be514fa
+https://s.viks.tv/200/index.m3u8?k=1743683054p632i831i412i19Sab3a0b2c7b552dc349b1a9c5516dcc5f
