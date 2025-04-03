@@ -15,6 +15,8 @@ def get_video_url(channel_name, channel_url):
         match = re.search(r'(https?://[^"]+\.m3u8[^"]*)', response.text)
         if match:
             video_src = match.group(1)
+            # Убираем часть после &remote=
+            video_src = video_src.split("&remote=")[0]
             print(f"Найден поток для {channel_name}: {video_src}")
             return channel_name, video_src
         else:
@@ -76,6 +78,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
