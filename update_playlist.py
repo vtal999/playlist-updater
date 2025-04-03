@@ -12,13 +12,13 @@ import time
 
 def init_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless=new")  # Запуск в фоновом режиме
+    options.add_argument("--headless")  # Запуск без интерфейса
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(120)
+    driver.set_page_load_timeout(30)  # Уменьшено время ожидания загрузки
     return driver
 
 def get_video_url(channel_name, channel_url):
@@ -27,7 +27,7 @@ def get_video_url(channel_name, channel_url):
         print(f"Открываю: {channel_url}")
         driver.get(channel_url)
         
-        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.TAG_NAME, "video")))
+        WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.TAG_NAME, "video")))
         video_tag = driver.find_element(By.TAG_NAME, "video")
         source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
         video_src = source_tag[0].get_attribute('src') if source_tag else video_tag.get_attribute('src')
@@ -84,7 +84,7 @@ def main():
     }
     video_urls = {}
     
-    with ThreadPoolExecutor(max_workers=os.cpu_count() or 4) as executor:
+    with ThreadPoolExecutor(max_workers=3) as executor:
         results = executor.map(lambda item: get_video_url(*item), channels.items())
     
     for result in results:
@@ -97,6 +97,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
