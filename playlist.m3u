@@ -1,5 +1,7 @@
 #EXTM3U
+#EXTINF:-1, Сапфир
+https://server5.musical.uz/saphir/index.m3u8?token=98f5142ddad620e5752b13942d9ba4b5362ab03d-9729a1412a2536794bf4ddd18be3d883-1743672094-1743661294
 #EXTINF:-1, 2+2
-https://s.viks.tv/238/index.m3u8?k=1743679358p632i831i412i19S67886e8f95d7f76d3009d064ee3edd11
+https://s.viks.tv/238/index.m3u8?k=1743679594p632i831i412i19Se0ec5ebee531e666024d0769ed3f6ae6
 #EXTINF:-1, СТБ
-https://s.viks.tv/101/index.m3u8?k=1743679356p632i831i412i19S58ede108aebe17121adc5c011956f0fe
+https://s.viks.tv/101/index.m3u8?k=1743679593p632i831i412i19S9b334c68d31bd4ae2bd0b46a7c217a78
