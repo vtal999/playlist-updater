@@ -18,7 +18,7 @@ def init_driver():
     options.add_argument("--disable-dev-shm-usage")
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(60)  # Уменьшено время ожидания загрузки
+    driver.set_page_load_timeout(120)  # Уменьшено время ожидания загрузки
     return driver
 
 def get_video_url(channel_name, channel_url):
