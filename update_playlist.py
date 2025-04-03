@@ -94,9 +94,12 @@ def main():
         with open('playlist.m3u', 'r', encoding='utf-8') as file:
             lines = file.readlines()
             for i in range(1, len(lines), 2):
-                channel_name = lines[i-1].strip().split(",")[1].strip()
-                video_url = lines[i].strip()
-                existing_urls[channel_name] = video_url
+                if i-1 < len(lines):
+                    channel_name_line = lines[i-1].strip()
+                    video_url_line = lines[i].strip()
+                    if channel_name_line.startswith("#EXTINF:") and video_url_line:
+                        channel_name = channel_name_line.split(",")[1].strip()
+                        existing_urls[channel_name] = video_url_line
 
     video_urls = {}
     
@@ -113,6 +116,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
