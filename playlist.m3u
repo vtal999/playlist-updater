@@ -1,17 +1,27 @@
 #EXTM3U
 #EXTINF:-1, Сапфир
-https://server5.musical.uz/saphir/index.m3u8?token=36ef386e81acd06620fd831bbd457aab5a0e5379-f0c2a0d0bf670b3f2c9ab0afb73e8a99-1743675488-1743664688
+https://server5.musical.uz/saphir/index.m3u8?token=fcb0646a94eb878e5d3f16c34b3e9b1552cc652a-ced802d7b1422602f089e5d2f8ede9a4-1743676101-1743665301
 #EXTINF:-1, 2+2
-https://s.viks.tv/238/index.m3u8?k=1743682988p632i831i412i19Sb586ba74048bba0cd97b17633e25d1de
+https://s.viks.tv/238/index.m3u8?k=1743683602p632i831i412i19Se353567fe09828a7ccb0339d6c3e4adc
 #EXTINF:-1, СТБ
-https://s.viks.tv/101/index.m3u8?k=1743682988p632i831i412i19Sf3d4fe85708a883053cf3a6c9936e1cf
+https://s.viks.tv/101/index.m3u8?k=1743683603p632i831i412i19Se497316736c59349fc689b06b984d626
 #EXTINF:-1, Первый канал
-https://s.viks.tv/540/index.m3u8?k=1743683021p632i831i412i19Sf8488db71784e374b00e40fb3453cf3f
+https://s.viks.tv/540/index.m3u8?k=1743683648p632i831i412i19S253c3d6c5da9f7bae7c1d872a7264e56
 #EXTINF:-1, Россия 1
-https://s.viks.tv/544/index.m3u8?k=1743683022p632i831i412i19Sa80e04701236df633640de8694cd776f
+https://s.viks.tv/544/index.m3u8?k=1743683641p632i831i412i19S12c0d85cfe5415346cbfee6e8ebca82e
 #EXTINF:-1, Россия 24
-https://s.viks.tv/563/index.m3u8?k=1743683043p632i831i412i19S53b6de0fe1603f20c8bbb16cd3ec8784
+https://s.viks.tv/563/index.m3u8?k=1743683646p632i831i412i19S6cc184f2153f299181585b1236708113
 #EXTINF:-1, НСТ
-https://s.viks.tv/127/index.m3u8?k=1743683063p632i831i412i19S828281e020ad27648621d20f38ee50f2
+https://s.viks.tv/127/index.m3u8?k=1743683688p632i831i412i19Sebaf851df67444985069f140d2a40ce3
 #EXTINF:-1, Кинохит
-https://s.viks.tv/200/index.m3u8?k=1743683054p632i831i412i19Sab3a0b2c7b552dc349b1a9c5516dcc5f
+https://s.viks.tv/200/index.m3u8?k=1743683682p632i831i412i19Sc97527a97476213939b855df91428ac7
+#EXTINF:-1, Новый канал
+https://s.viks.tv/573/index.m3u8?k=1743683682p632i831i412i19Sf5ef071d584d953a7fe79258dcc1d0f8
+#EXTINF:-1, КиноУжас
+https://s.viks.tv/227/index.m3u8?k=1743683721p632i831i412i19S7eed6e0a22794d79089ec28e29834d5c
+#EXTINF:-1, Дом кино
+https://s.viks.tv/186/index.m3u8?k=1743683759p632i831i412i19S1ef1099f438bb6122cca3279dc9ea654
+#EXTINF:-1, Страшное HD
+https://s.viks.tv/216/index.m3u8?k=1743683728p632i831i412i19S48b2e5bd2b9ab18e9af6c14fbc2fc6df
+#EXTINF:-1, Шокирующее HD
+https://s.viks.tv/169/index.m3u8?k=1743683750p632i831i412i19S7904d61c4aa2818767d53cdc66e73393
