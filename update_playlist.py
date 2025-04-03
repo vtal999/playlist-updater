@@ -111,6 +111,11 @@ def main():
         "Россия 24": "http://ip.viks.tv/126307-rossiya_24_tv.html",
         "НСТ": "http://ip.viks.tv/394-nst_4.html",
         "Кинохит": "http://ip.viks.tv/477-kinohit_14.html",
+        "Новый канал": "http://ip.viks.tv/129524-novyy-kanal.html",
+"КиноУжас": "http://ip.viks.tv/620-kinouzhas_8.html",
+"Дом кино": "http://ip.viks.tv/438-dom-kino_19.html",
+"Страшное HD": "http://ip.viks.tv/022512-strashnoe-hd.html",
+"Шокирующее HD": "http://ip.viks.tv/572-shokiruyuschee-hd_1.html",
     }
 
     video_urls = {}
