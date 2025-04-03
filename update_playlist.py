@@ -8,39 +8,39 @@ import requests
 import os
 import base64
 from concurrent.futures import ThreadPoolExecutor
+import time
 
-# Функция для инициализации драйвера
 def init_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless=new")  # Обновленный headless-режим
+    options.add_argument("--headless=new")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
     driver.set_page_load_timeout(30)
     return driver
 
-# Функция для получения видео URL
 def get_video_url(channel_name, channel_url):
     driver = init_driver()
     try:
         print(f"Открываю: {channel_url}")
         driver.get(channel_url)
+        
+        # Ждем полной загрузки страницы
+        WebDriverWait(driver, 20).until(lambda d: d.execute_script("return document.readyState") == "complete")
+        
+        # Прокручиваем страницу вниз, чтобы убедиться, что все элементы загрузились
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)  # Даем время на подгрузку элементов
 
-        # Проверяем, загрузилась ли страница
-        if driver.execute_script("return document.readyState") != "complete":
-            print(f"Страница {channel_url} загружается слишком долго...")
-            return None
-
-        # Ждем появления <video>
+        # Ждем появления видео
         wait = WebDriverWait(driver, 15)
         try:
             video_tag = wait.until(EC.presence_of_element_located((By.TAG_NAME, "video")))
         except Exception:
             print(f"Видео тег не найден на {channel_url}")
-            print(driver.page_source[:500])  # Логируем первые 500 символов HTML
+            print(driver.page_source[:1000])  # Логируем первые 1000 символов HTML
             return None
 
         # Поиск источника видео
@@ -60,17 +60,14 @@ def get_video_url(channel_name, channel_url):
     finally:
         driver.quit()
 
-# Функция для обновления плейлиста
 def update_playlist(video_urls):
     playlist_path = 'playlist.m3u'
     print(f"Обновляю плейлист: {playlist_path}")
-
     with open(playlist_path, 'w', encoding='utf-8') as file:
         file.write("#EXTM3U\n")
         for channel_name, video_url in video_urls.items():
             file.write(f"#EXTINF:-1, {channel_name}\n{video_url}\n")
 
-    # GitHub API для обновления файла
     repo_owner = "vtal999"
     repo_name = "playlist-updater"
     file_path = "playlist.m3u"
@@ -87,7 +84,6 @@ def update_playlist(video_urls):
     sha = response.json().get("sha", "") if response.status_code == 200 else ""
 
     encoded_content = base64.b64encode(open(playlist_path, 'rb').read()).decode('utf-8')
-
     data = {"message": "Автообновление плейлиста", "content": encoded_content, "sha": sha, "branch": branch}
     response = requests.put(url, headers=headers, json=data)
 
@@ -96,29 +92,23 @@ def update_playlist(video_urls):
     else:
         raise Exception(f"Ошибка обновления через API: {response.text}")
 
-# Основная функция
 def main():
     channels = {
         "Сапфир": "https://onlinetv.su/tv/kino/262-sapfir.html",
-
     }
-
     video_urls = {}
-
-    # Запускаем в несколько потоков
     with ThreadPoolExecutor(max_workers=os.cpu_count() or 4) as executor:
         results = executor.map(lambda item: get_video_url(*item), channels.items())
-
     for result in results:
         if result:
             channel_name, video_url = result
             video_urls[channel_name] = video_url
-
     if video_urls:
         update_playlist(video_urls)
 
 if __name__ == "__main__":
     main()
+
 
 
 
