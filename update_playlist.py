@@ -99,7 +99,7 @@ def update_playlist(video_urls):
 # Основная функция
 def main():
     channels = {
-        "Сапфир": "https://onlinetv.su/tv/kino/262-sapfir.html#google_vignette",
+        "Сапфир": "https://onlinetv.su/tv/kino/262-sapfir.html",
         "2+2": "http://ip.viks.tv/114427-22-tv.html",
         "СТБ": "http://ip.viks.tv/032117-stb.html",
     }
