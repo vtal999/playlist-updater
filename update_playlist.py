@@ -20,7 +20,7 @@ def init_driver():
 
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(120)  # Увеличиваем таймаут до 120 секунд
+    driver.set_page_load_timeout(30)  # Увеличиваем таймаут до 120 секунд
     return driver
 
 # Функция для получения видео URL
