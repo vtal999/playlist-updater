@@ -1,4 +1,147 @@
 #EXTM3U
 #EXTINF:-1, Сапфир
-https://server5.musical.uz/saphir/index.m3u8?token=760152c5da0794e99e8f076551590eaf74103daa-524603f913e4965baffec06b688ca46f-1743725732-1743714932
-
+https://server5.musical.uz/saphir/index.m3u8?token=bac8a2f97f1cf1aa552515cc551dbf37c772cc74-e44879f2c6e86ae6b3e5a6ffa4bfee2c-1743725912-1743715112
+#EXTINF:-1, Amedia Premium
+https://server5.musical.uz/amedia_premium/index.m3u8?token=81b0beb62585fcc0e343e35f3256461340228472-fd3dbf96647fd6e9bc237e927cc558a8-1743725912-1743715112
+#EXTINF:-1, Амедиа 2
+https://server5.musical.uz/amedia2/index.m3u8?token=9beadb276af44e50d849d5adada477f805bb795b-58678939fcc3db439a9676061a61ae9b-1743725912-1743715112
+#EXTINF:-1, Амедиа 1
+https://server5.musical.uz/amedia1/index.m3u8?token=a7c8b9b738d67855edc986c2f13004c407244ae5-c92973a869b45f4a2aea4eba190e853d-1743725912-1743715112
+#EXTINF:-1, КиноСезон
+https://server5.musical.uz/kino-sezon/index.m3u8?token=cd319ce394e4e304ad27eda8fbf1b983022b25c6-92687a5abf9a87daaeae2c9097384cf6-1743725912-1743715112
+#EXTINF:-1, Классика Кино
+https://server5.musical.uz/klassika-kino/index.m3u8?token=9cd9d2347e493806ec1fabb2d60218a6094e8907-b350053966d65f65a8a0288ac49acc12-1743725912-1743715112
+#EXTINF:-1, Советское кино
+https://server5.musical.uz/sovet-kino/index.m3u8?token=9874a532c1e40e83f0790f5aaef7e627acb5b2b0-bc46691d8a5434667af0341b723efac8-1743725912-1743715112
+#EXTINF:-1, Любимое кино
+https://server5.musical.uz/lyubimoe-kin/index.m3u8?token=86f87371fab368ac777a3b3afe33c35b6f2d5956-ba553e42ba0a6fe5004929f514f784ec-1743725912-1743715112
+#EXTINF:-1, Дом кино
+https://server5.musical.uz/domkino_web/index.m3u8?token=86d173c582960c5231fd190b8cb2e41c270368b6-4cc88be2a74f3b9ff8ebcc09ddd7f6c4-1743725912-1743715112
+#EXTINF:-1, НТВ Хит
+https://server5.musical.uz/ntvxit_web/index.m3u8?token=8a8ee3eeaf37f8486f4ffa91cf92db19449e2e03-924cac42399e3c59c2c36618766c6ef9-1743725912-1743715112
+#EXTINF:-1, Дорама
+https://server5.musical.uz/dorama/index.m3u8?token=195c85447a64026c957c249727416be036cfd561-0eceb0b1de50f7f4f0c58f338f621dd4-1743725912-1743715112
+#EXTINF:-1, Русский бестселлер
+https://server5.musical.uz/rus_bestseller_web/index.m3u8?token=1f58e8c1c17e0adf83b2cc416d9e2705cac2e1ee-f2f8afa3a24ac72551c3fd1e8d8ffea7-1743725912-1743715112
+#EXTINF:-1, Русский детектив
+https://server5.musical.uz/rus_detektiv_web/index.m3u8?token=fcb9951f8b5b905af23ce850d72abe2e5d7629a1-716f54572e816b04ab0d1cac97e7c7e9-1743725912-1743715112
+#EXTINF:-1, Русский роман
+https://server5.musical.uz/rus_roman_web/index.m3u8?token=3da56167b89a66ccf0d74bd06cc0c81f41df34b5-b54e292439f0774551a72a928cd16fd1-1743725912-1743715112
+#EXTINF:-1, Победа
+https://server5.musical.uz/pobeda/index.m3u8?token=dd7612faf1468ec9007257ca947d525173166d13-b3be71f0dd2a4afa1d35d1289ba4a0fc-1743725912-1743715112
+#EXTINF:-1, Кинопоказ
+https://server5.musical.uz/kino-pokaz_web/index.m3u8?token=5e07939cb462636628d5748ea33e5214a281e397-a0c0dbff1c9879814b01a68e4ea1ec21-1743725912-1743715112
+#EXTINF:-1, Мосфильм золотая коллекция
+https://server5.musical.uz/mos-film_web/index.m3u8?token=1bc2326ee7662c90eac2350d72afee07c9254e21-610cbfc517b7dd4e024901b7e19484ca-1743725912-1743715112
+#EXTINF:-1, Ретро тв
+https://server5.musical.uz/retrotv_web/index.m3u8?token=66cfcd41256e8887d02fa848546693279968a915-5c9e42feff386e7386c690ad287e8917-1743725913-1743715113
+#EXTINF:-1, Red
+https://server5.musical.uz/red_web/index.m3u8?token=57f05506a451f5c75593345c6f7eb3d1bd9ebc4b-ab532d0d87bf3e768616518ae6faf0f9-1743725913-1743715113
+#EXTINF:-1, Black
+https://server5.musical.uz/black_web/index.m3u8?token=fbcf8f46187cd23bb62067b0a0376386a1a24235-75d760a52b726a147c00895590cfefb2-1743725913-1743715113
+#EXTINF:-1, Bollywood HD
+https://server5.musical.uz/bollywood_web/index.m3u8?token=a7fd6c34308073c5e0b5624b3496d41427ce76cb-7173227626c53a1bc73484ff60d47d57-1743725913-1743715113
+#EXTINF:-1, Еврокино
+https://server5.musical.uz/euro-kino_web/index.m3u8?token=91bace61c1df04568aa3f52247d07f92af708d92-e54b8f16e6027a6c094f486930a65294-1743725913-1743715113
+#EXTINF:-1, Мир сериала
+https://server5.musical.uz/mir-seriala_web/index.m3u8?token=15e2359d9aa6ca20cf3e7908d4908b1d468dd170-2d89aad13702939646ddaa30f1b33d3e-1743725913-1743715113
+#EXTINF:-1, Hollywood
+https://server5.musical.uz/hollywd_web/index.m3u8?token=b6076946a64521aa45d8ef9d7b6e5e19243e3d78-ad24056ee4000702e4f1f55bed863d38-1743725913-1743715113
+#EXTINF:-1, Русский иллюзион
+https://server5.musical.uz/rusiluzion_web/index.m3u8?token=a210d242172d93da2c7422cf51e134dcf29fea21-97d67436a82a4cd1bf3c962665063678-1743725913-1743715113
+#EXTINF:-1, Фокс
+https://server5.musical.uz/fox_web/index.m3u8?token=de61dab1c26ee64d6fc4ba4032edb3eda38538b6-a9c96dc2557cf6f7e5f2f23e7a0feb4a-1743725913-1743715113
+#EXTINF:-1, Фокс лайф
+https://server5.musical.uz/fox_life_web/index.m3u8?token=af4d22945d56f387bab3fa47614be2e87ca8dc62-7252f5196d680e91854f99517a5ecbc3-1743725913-1743715113
+#EXTINF:-1, КиноСат
+https://server5.musical.uz/kinosat_web/index.m3u8?token=a3d554424ee6702713dd4502ac09741848b7dc30-1201057ba5ff18d3aa67edc7eaa95c39-1743725913-1743715113
+#EXTINF:-1, Фантастика
+https://server5.musical.uz/fantastikahd/index.m3u8?token=358af759294e88c8017604bf56a684d1561273de-faedb4ce83863fee1747505ddfe4fd60-1743725913-1743715113
+#EXTINF:-1, НТВ Сериал
+https://server5.musical.uz/ntv_serial_web/index.m3u8?token=c76968dd430ba0cfb9bff87f043cb4450457c943-ec15f593efd214e70384c95071ab8243-1743725913-1743715113
+#EXTINF:-1, Шокирующее HD
+https://server5.musical.uz/shokiruyushee/index.m3u8?token=77b7da991644d8d1f2674c81041b57f54815f98d-b88c357cebab0f05265954c05ed553a8-1743725913-1743715113
+#EXTINF:-1, Страшное HD
+https://server5.musical.uz/strashnoe_hd/index.m3u8?token=d287bc2302f52e6797b35b7e0420194565c7a97f-49798e0225522da31bbede46ce0a94a5-1743725913-1743715113
+#EXTINF:-1, Paramount Comedy
+https://server5.musical.uz/paramount_web/index.m3u8?token=c4c4d4aba1c22e999bbc5689d7d689f20d48e68c-291aa3a5fd253b57f9439589c8c93425-1743725913-1743715113
+#EXTINF:-1, Телекафе
+https://server5.musical.uz/telekafe-web/index.m3u8?token=883b6f3704f4eb67d4c5deee468cd03ce6e99155-42d36578fc156de74ccfd6ab89d69340-1743725913-1743715113
+#EXTINF:-1, тв3
+https://server5.musical.uz/tv3/index.m3u8?token=3aac338cf22ad244566e611cfb3025abd970d784-29be075bd44f7aa30dc5e7328a50283b-1743725914-1743715114
+#EXTINF:-1, НТВ
+https://server5.musical.uz/ntvhd_web/index.m3u8?token=8df663f3e0378c4ab92fee4b7d2258f4d24f1380-43a0dfa7ab58dbb3f4e8f95230da0533-1743725914-1743715114
+#EXTINF:-1, Рен ТВ
+https://server5.musical.uz/rentv/index.m3u8?token=f1323735f588aeec102b0a7bd12c14a594f64140-26dd8a3d64675321cf64c7429f3e4d3c-1743725914-1743715114
+#EXTINF:-1, Домашний
+https://server5.musical.uz/dom_web/index.m3u8?token=887256bb875a0ffeff7064adff6480739d4b0e13-5cbb703a390c0a7479ae9ec6db673ba3-1743725914-1743715114
+#EXTINF:-1, Звезда
+https://tvchannelstream1.tvzvezda.ru/cdn/tvzvezda/playlist_sdhigh.m3u8
+#EXTINF:-1, ТВ Центр
+https://tvc-hls.cdnvideo.ru/tvc-res/smil:vd9221_2.smil/playlist.m3u8
+#EXTINF:-1, Пятый канал
+https://server5.musical.uz/5-ch_web/index.m3u8?token=c0234adc1b89a3a9e51ca8626ae1d890e786ca83-32b951c4b3bfd1c01b95f0e7cbe56272-1743725914-1743715114
+#EXTINF:-1, РТР-Планета
+https://player.smotrim.ru/iframe/stream/live_id/d7fef212-df66-485d-9952-7eab82d7d51b.m3u8
+#EXTINF:-1, Мир
+https://hls-mirtv.cdnvideo.ru/mirtv-parampublish/mirtv_2500/tracks-v1a1/mono.m3u8
+#EXTINF:-1, Россия-Культура
+https://server5.musical.uz/russia-k/index.m3u8?token=4d05114355b84a70b2729ec881a34a38708e648a-004114d3e0f3aded8258a0174701d56e-1743725914-1743715114
+#EXTINF:-1, Красная линия
+https://server5.musical.uz/red_line/index.m3u8?token=c1fb11cb8d67cb72882998ae78c49b7f6a6f09ee-cfd87852a5bba8e8d3aea449a066ba95-1743725914-1743715114
+#EXTINF:-1, ОТР
+https://server5.musical.uz/otp/index.m3u8?token=91fa2a8988c03d81e8e8e16456a25b50b0e62549-28d0786ae6e6e289f78fa20bb3e4c104-1743725914-1743715114
+#EXTINF:-1, Спас
+https://spas.mediacdn.ru/cdn/spas/playlist.m3u8
+#EXTINF:-1, 8 канал
+https://server5.musical.uz/8-channel/index.m3u8?token=f83ac6dfba735871376a9ae82b2b6f199a237021-7bd3222b2ed83e75f26cead479202364-1743725914-1743715114
+#EXTINF:-1, Соловьев Лайф
+https://player.smotrim.ru/iframe/stream/live_id/985d5c7b-9727-4942-a4ba-a6e852caf0c1?e=1734034699.m3u8
+#EXTINF:-1, Евроньюс
+https://server5.musical.uz/euronews/index.m3u8?token=003316dcbc7d2ea3731524f825682d28a1f10832-0123d42838d3c941d0e8325be6f3fc50-1743725914-1743715114
+#EXTINF:-1, Россия 24
+https://server5.musical.uz/russia24/index.m3u8?token=40bb87e5e2875ee4381eacfdbbcd6b4a27bfa7e2-0208e7077b9fb7f4704e0f3b6a601e98-1743725914-1743715114
+#EXTINF:-1, RTVi
+https://server5.musical.uz/rtvi/index.m3u8?token=e79a376d93d36b916d94e4322867e79feeefb3be-77732fcac25d29131e65824b09e3040f-1743725915-1743715115
+#EXTINF:-1, CGTN русский
+https://news.cgtn.com/resource/live/russian/cgtn-r.m3u8
+#EXTINF:-1, Deutsche Welle
+https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/stream05/streamPlaylist.m3u8
+#EXTINF:-1, Беларусь 24
+https://server5.musical.uz/belarus24_web/index.m3u8?token=026898cecd524a02c7b0a2ec7028a88beefbbc69-ad070239e180c5fc7ef4cc70d38a842a-1743725915-1743715115
+#EXTINF:-1, Дождь
+https://wl.tvrain.tv/transcode/ngrp:ses_all/chunklist_b2692000.m3u8
+#EXTINF:-1, Известия
+https://hls-igi.cdnvideo.ru/igi/igi_sq/playlist.m3u8
+#EXTINF:-1, Вести ФМ
+https://player.smotrim.ru/iframe/stream/live_id/0487fd79-60e6-4333-a545-909d6e015173.m3u8
+#EXTINF:-1, Пятница
+https://server5.musical.uz/friday/index.m3u8?token=2a95fb80b233719ed3f2c0576362bd678fe05704-071abe8d8b0e8e8fe140138c56fcc658-1743725915-1743715115
+#EXTINF:-1, Анекдот ТВ
+https://server5.musical.uz/anekdot/index.m3u8?token=95c5634eb1a4d9d7d15ca6a97dac0cdded855ff8-efefafb96c92463d3715312507f7078c-1743725915-1743715115
+#EXTINF:-1, Ювелирочка
+https://server5.musical.uz/yuverlirocha/index.m3u8?token=10b5d8c80715cb6ff57a4d87f24041d5b1946236-148e7d75e2d5d5ad637be71b87d13cd2-1743725915-1743715115
+#EXTINF:-1, ТНТ
+https://server5.musical.uz/tnt/index.m3u8?token=23bcd24d84df745dba0236e06efb2621ab0689ed-83c9b9af97aa49851a4305f63614bdf8-1743725915-1743715115
+#EXTINF:-1, СТС Лав
+https://server5.musical.uz/ctclove_web/index.m3u8?token=6c52f5de62e6f0bf673430f97badb96be3bc419d-e777cdc5eaf3d2e786ca30c926fe7291-1743725915-1743715115
+#EXTINF:-1, Сарафан
+https://server5.musical.uz/sarafan_web/index.m3u8?token=f5d37ab147890e9f45c1dda1027263dce15c2b62-691322bf24355e2fa0359e4ada9b5491-1743725915-1743715115
+#EXTINF:-1, СТС
+https://server5.musical.uz/ctc_web/index.m3u8?token=5d51108548ee1b188992f7c3810d131fc0a70fe2-b9e28c6597ac8a2d75990bf67be66a99-1743725915-1743715115
+#EXTINF:-1, Москва Доверие
+https://server5.musical.uz/moskva-doveria/index.m3u8?token=1f155813a998ad4e98bd0f760fd6e31985294d2a-8bbd24ee13c6a0cd179e8a9974bc06b4-1743725915-1743715115
+#EXTINF:-1, Мужской
+https://server5.musical.uz/mujskotv_web/index.m3u8?token=6ceb7f333441560f61976bef5c09801dead87795-da3a6c087e06d7171378cd032c74649e-1743725915-1743715115
+#EXTINF:-1, 2х2
+https://server5.musical.uz/22_Web/index.m3u8?token=2c448ae3f1ef2b936a0811cf0c1aedb10427ca0d-e3344d522443cb1a9669abe8448b55c8-1743725915-1743715115
+#EXTINF:-1, Канал Ю
+https://server5.musical.uz/utv_web/index.m3u8?token=1f6e8de8456d270ba9c4433bb1a53a09a120bd66-a57b2e0065ded8f0946acc2732cd79a4-1743725915-1743715115
+#EXTINF:-1, Че
+https://server5.musical.uz/che-web/index.m3u8?token=a7e4ff81d32fa9fc807d22ed037dff9fe4b2171f-2b9dcb11c974a91c9b0c0071c30be8ff-1743725916-1743715116
+#EXTINF:-1, Суббота
+https://server5.musical.uz/subota/index.m3u8?token=34ff97b49991ca1f63aa329395c5588cac44e388-a7db6fde021823b1a8da79a67fc7d14e-1743725916-1743715116
+#EXTINF:-1, ТНТ 4
+https://server5.musical.uz/tnt4/index.m3u8?token=853209d63d71cbe2338a76f327afa2ff1702f5c1-70d7a1a678707407dbd6fcddd764a423-1743725916-1743715116
+#EXTINF:-1, World Fashion Channel
+https://cdn.wfc.tv/cdn/stream-rus-1080p.m3u8
