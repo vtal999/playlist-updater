@@ -112,10 +112,18 @@ def main():
         "НСТ": "http://ip.viks.tv/394-nst_4.html",
         "Кинохит": "http://ip.viks.tv/477-kinohit_14.html",
         "Новый канал": "http://ip.viks.tv/129524-novyy-kanal.html",
-"КиноУжас": "http://ip.viks.tv/620-kinouzhas_8.html",
-"Дом кино": "http://ip.viks.tv/438-dom-kino_19.html",
-"Страшное HD": "http://ip.viks.tv/022512-strashnoe-hd.html",
-"Шокирующее HD": "http://ip.viks.tv/572-shokiruyuschee-hd_1.html",
+        "КиноУжас": "http://ip.viks.tv/620-kinouzhas_8.html",
+        "Дом кино": "http://ip.viks.tv/438-dom-kino_19.html",
+        "Страшное HD": "http://ip.viks.tv/022512-strashnoe-hd.html",
+        "Шокирующее HD": "http://ip.viks.tv/572-shokiruyuschee-hd_1.html",
+        "1000": "http://ip.viks.tv/423-1000_15.html",
+        "Hollywood": "http://ip.viks.tv/576-hollywood.html",
+        "red": "http://ip.viks.tv/105426-sony.html",
+        "1000 Action": "http://ip.viks.tv/422-1000-action_9.html",
+        "Кинокомедия": "http://ip.viks.tv/453-komediya_1.html",
+        "TV XX": "http://ip.viks.tv/498-tv-xxi.html",
+        "Amedia Premium HD": "http://ip.viks.tv/497-amedia-premium-hd_2.html",
+        "Иллюзион Плюс": "http://ip.viks.tv/491-illyuzion-plyus_1.html",
     }
 
     video_urls = {}
