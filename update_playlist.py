@@ -20,7 +20,7 @@ def init_driver():
 
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(30)  # Увеличиваем таймаут до 120 секунд
+    driver.set_page_load_timeout(120)  # Увеличиваем таймаут до 120 секунд
     return driver
 
 # Функция для получения видео URL
@@ -103,7 +103,8 @@ def update_playlist(video_urls):
 # Основная функция
 def main():
     channels = {
-         "2+2": "http://ip.viks.tv/114427-22-tv.html",
+        "Сапфир": "https://onlinetv.su/tv/kino/262-sapfir.html",
+        "2+2": "http://ip.viks.tv/114427-22-tv.html",
         "СТБ": "http://ip.viks.tv/032117-stb.html",
         "Первый канал": "http://ip.viks.tv/021612-pervyy-kanal.html",
         "Россия 1": "http://ip.viks.tv/031327-rossiya1_tv.html",
