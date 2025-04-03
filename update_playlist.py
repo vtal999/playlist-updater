@@ -18,7 +18,7 @@ def init_driver():
     options.add_argument("--disable-dev-shm-usage")
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(120)  # Уменьшено время ожидания загрузки
+    driver.set_page_load_timeout(180)  # Уменьшено время ожидания загрузки
     return driver
 
 def get_video_url(channel_name, channel_url):
@@ -81,10 +81,77 @@ def main():
         "Сапфир": "https://onlinetv.su/tv/kino/262-sapfir.html",
         "Amedia Premium": "https://onlinetv.su/tv/kino/404-amedia-premium.html",
         "Амедиа 2": "https://onlinetv.su/tv/kino/403-amedia-2.html",
+        "Амедиа 1": "https://onlinetv.su/tv/kino/402-amedia-1.html",
+        "КиноСезон": "https://onlinetv.su/tv/kino/353-kinosezon.html",
+        "Классика Кино": "https://onlinetv.su/tv/kino/352-klassika-kino.html",
+        "Советское кино": "https://onlinetv.su/tv/kino/351-sovetskoe-kino.html",
+        "Любимое кино": "https://onlinetv.su/tv/kino/350-ljubimoe-kino.html",
+        "Дом кино": "https://onlinetv.su/tv/kino/317-dom-kino.html",
+        "НТВ Хит": "https://onlinetv.su/tv/kino/314-ntv-hit.html",
+        "Дорама": "https://onlinetv.su/tv/kino/309-dorama.html",
+        "Русский бестселлер": "https://onlinetv.su/tv/kino/308-russkij-bestseller.html",
+        "Русский детектив": "https://onlinetv.su/tv/kino/304-russkij-detektiv.html",
+        "Русский роман": "https://onlinetv.su/tv/kino/301-russkij-roman.html",
+        "Победа": "https://onlinetv.su/tv/kino/257-pobeda.html",
+        "Кинопоказ": "https://onlinetv.su/tv/kino/222-kinopokaz.html",
+        "Мосфильм золотая коллекция": "https://onlinetv.su/tv/kino/126-mosfilm-zolotaja-kollekcija.html",
+        "Ретро тв": "https://onlinetv.su/tv/kino/125-retro-tv.html",
+        "Red": "https://onlinetv.su/tv/kino/118-red.html",
+        "Black": "https://onlinetv.su/tv/kino/117-black.html",
+        "Bollywood HD": "https://onlinetv.su/tv/kino/116-bollywood.html",
+        "Еврокино": "https://onlinetv.su/tv/kino/115-evrokino.html",
+        "Мир сериала": "https://onlinetv.su/tv/kino/113-mir-seriala.html",
+        "Hollywood": "https://onlinetv.su/tv/kino/107-hollywood.html",
+        "Русский иллюзион": "https://onlinetv.su/tv/kino/106-russkij-illjuzion.html",
+        "Фокс": "https://onlinetv.su/tv/kino/103-fox.html",
+        "Фокс лайф": "https://onlinetv.su/tv/kino/102-fox-life.html",
+        "КиноСат": "https://onlinetv.su/tv/kino/100-kinosat.html",
+        "Фантастика": "https://onlinetv.su/tv/kino/99-fantastika-hd.html",
+		"НТВ Сериал": "https://onlinetv.su/tv/kino/98-ntv-serial.html",
+        "Шокирующее HD": "https://onlinetv.su/tv/kino/86-shokirujuschee-hd.html",
+        "Страшное HD": "https://onlinetv.su/tv/kino/85-strashnoe-hd.html",
+        "Paramount Comedy": "https://onlinetv.su/tv/entertainment/37-comedy-central.html",
+        "Телекафе": "https://onlinetv.su/tv/entertainment/34-telekafe.html",
+        "тв3": "https://onlinetv.su/tv/kino/7-tv-3.html",
+        "НТВ": "https://onlinetv.su/tv/public/6-ntv.html",
+        "Рен ТВ": "https://onlinetv.su/tv/public/316-ren-tv.html",
+		"Домашний": "https://onlinetv.su/tv/public/318-domashnij.html",
+        "Звезда": "https://onlinetv.su/tv/public/310-zvezda.html",
+        "ТВ Центр": "https://onlinetv.su/tv/public/9-tv-centr.html",
+        "Пятый канал": "https://onlinetv.su/tv/public/330-pjatyj-kanal.html",
+        "Мир": "https://onlinetv.su/tv/public/18-mir.html",	
+        "Красная линия": "https://onlinetv.su/tv/public/233-krasnaja-linija.html",
+        "ОТР": "https://onlinetv.su/tv/public/11-otr.html",
+        "Спас": "https://onlinetv.su/tv/public/20-spas.html",
+        "8 канал": "https://onlinetv.su/tv/public/15-8-kanal.html",
+        "Соловьев Лайф": "https://onlinetv.su/tv/news/313-solovev-live.html",
+        "Евроньюс": "https://onlinetv.su/tv/news/305-euronews.html",
+        "RTVi": "https://onlinetv.su/tv/news/186-rtvi.html",		
+        "CGTN русский": "https://onlinetv.su/tv/news/184-cgtn.html",
+        "Deutsche Welle": "https://onlinetv.su/tv/news/183-dw-news.html",
+        "Беларусь 24": "https://onlinetv.su/tv/news/132-belarus-24.html",
+        "Дождь": "https://onlinetv.su/tv/news/124-dozhd.html",
+		"Известия": "https://onlinetv.su/tv/news/28-izvestija.html",
+        "Вести ФМ": "https://onlinetv.su/tv/news/22-vesti-fm.html",
+        "Пятница": "https://onlinetv.su/tv/entertainment/41-pjatnica.html",
+        "Анекдот ТВ": "https://onlinetv.su/tv/entertainment/341-anekdot-tv.html",
+        "Ювелирочка": "https://onlinetv.su/tv/entertainment/332-juvelirochka.html",
+        "ТНТ": "https://onlinetv.su/tv/entertainment/329-tnt.html",		
+        "СТС Лав": "https://onlinetv.su/tv/entertainment/307-sts-love.html",
+        "Сарафан": "https://onlinetv.su/tv/entertainment/225-sarafan.html",
+        "СТС": "https://onlinetv.su/tv/entertainment/224-sts.html",
+        "Москва Доверие": "https://onlinetv.su/tv/entertainment/189-moskva-doverie.html",
+		"Мужской": "https://onlinetv.su/tv/sport/136-muzhskoj.html",
+        "2х2": "https://onlinetv.su/tv/entertainment/61-2x2.html",			
+        "Канал Ю": "https://onlinetv.su/tv/entertainment/44-kanal-ju.html",
+        "Че": "https://onlinetv.su/tv/entertainment/43-che.html",
+        "Суббота": "https://onlinetv.su/tv/entertainment/40-subbota.html",
+		"ТНТ 4": "https://onlinetv.su/tv/entertainment/39-tnt4.html",
+        "World Fashion Channel": "https://onlinetv.su/tv/entertainment/38-world-fashion.html",
     }
     video_urls = {}
     
-    with ThreadPoolExecutor(max_workers=3) as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
         results = executor.map(lambda item: get_video_url(*item), channels.items())
     
     for result in results:
