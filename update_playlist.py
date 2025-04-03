@@ -71,7 +71,7 @@ def update_playlist(video_urls):
 # Функция для получения видео URL с проверкой на <source>
 def get_video_url(driver, channel_url):
     driver.get(channel_url)
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(30)
 
     # Находим тег <video> и проверяем наличие внутри него <source>
     video_tag = driver.find_element(By.TAG_NAME, 'video')
