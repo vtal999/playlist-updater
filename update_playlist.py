@@ -106,7 +106,7 @@ def main():
         "Россия 1": "http://ip.viks.tv/031327-rossiya1_tv.html",
         "Россия 24": "http://ip.viks.tv/126307-rossiya_24_tv.html",
         "НСТ": "http://ip.viks.tv/394-nst_4.html",
-        "Кинохит": "http://ip.viks.tv/477-kinohit_14.htm",
+        "Кинохит": "http://ip.viks.tv/477-kinohit_14.html",
     }
 
     video_urls = {}
