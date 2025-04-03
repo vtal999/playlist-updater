@@ -1,27 +1,43 @@
 #EXTM3U
 #EXTINF:-1, Сапфир
-https://server5.musical.uz/saphir/index.m3u8?token=1a5b57d27d78fd4a5f742f9f712aff6de232a05e-7d3b1d8d8314c071ef61b7d03c71986c-1743676588-1743665788
+https://server5.musical.uz/saphir/index.m3u8?token=ef27f1e3b48c35219224fac45037000a1caf71df-cef00e35f1958dcd0b0a90e18603694a-1743676997-1743666197
 #EXTINF:-1, 2+2
-https://s.viks.tv/238/index.m3u8?k=1743684084p632i831i412i19S2ab051616528fe045add784b82d3001b
+https://s.viks.tv/238/index.m3u8?k=1743684496p632i831i412i19S050eb74d6394ab599cd63405554942ae
 #EXTINF:-1, СТБ
-https://s.viks.tv/101/index.m3u8?k=1743684088p632i831i412i19S383fac9ec81c7ef7458d7446fcc8266d
+https://s.viks.tv/101/index.m3u8?k=1743684497p632i831i412i19Sc4db7ab4241e9d4ca2d4e2fb9958f802
 #EXTINF:-1, Первый канал
-https://s.viks.tv/540/index.m3u8?k=1743684122p632i831i412i19Sf255275726537ee0116138ae6fb423b1
+https://s.viks.tv/540/index.m3u8?k=1743684540p632i831i412i19S0fdfa90cf63299ab03f21af3ceb71932
 #EXTINF:-1, Россия 1
-https://s.viks.tv/544/index.m3u8?k=1743684120p632i831i412i19S4dbc31a59aece7b00bcb919e87c8f531
+https://s.viks.tv/544/index.m3u8?k=1743684532p632i831i412i19S9744f7f08e7ea8647babf814d1e2ad49
 #EXTINF:-1, Россия 24
-https://s.viks.tv/563/index.m3u8?k=1743684137p632i831i412i19S98fb6eef138562cb4cb4e55e686b860e
+https://s.viks.tv/563/index.m3u8?k=1743684556p632i831i412i19Sb1b020f9c7c4b4270a82d7ca5b5f241f
 #EXTINF:-1, НСТ
-https://s.viks.tv/127/index.m3u8?k=1743684150p632i831i412i19S1b04043424a8ad66801a3f1ceb218032
+https://s.viks.tv/127/index.m3u8?k=1743684576p632i831i412i19Sa2e4cc04dc366e751342a423c88e398f
 #EXTINF:-1, Кинохит
-https://s.viks.tv/200/index.m3u8?k=1743684171p632i831i412i19S08d1eabd507e774387ab24e5c8d61f59
+https://s.viks.tv/200/index.m3u8?k=1743684581p632i831i412i19S6fc771a4ab19be37b8c3a9c99eca3f5f
 #EXTINF:-1, Новый канал
-https://s.viks.tv/573/index.m3u8?k=1743684163p632i831i412i19S8e4cb8d52f32f05794dee56304fea61f
+https://s.viks.tv/573/index.m3u8?k=1743684586p632i831i412i19S7fa05a2090d888015f41bc5ae5cb3f82
 #EXTINF:-1, КиноУжас
-https://s.viks.tv/227/index.m3u8?k=1743684182p632i831i412i19S96dc2e64b89a55c2ab5e9bd89d2c64af
+https://s.viks.tv/227/index.m3u8?k=1743684601p632i831i412i19Sb437b5931e3f21986aff87ceebfda6fe
 #EXTINF:-1, Дом кино
-https://s.viks.tv/186/index.m3u8?k=1743684190p632i831i412i19Sc60f700fdbfacb972d8acb44c3472983
+https://s.viks.tv/186/index.m3u8?k=1743684616p632i831i412i19S9e1dc1b6e97568ed86245ec96a0fa325
 #EXTINF:-1, Страшное HD
-https://s.viks.tv/216/index.m3u8?k=1743684195p632i831i412i19S376c0fcc155371db9267159f400f62ba
+https://s.viks.tv/216/index.m3u8?k=1743684616p632i831i412i19Seaf11a4c5c05441bd81cfa6a55819a7e
 #EXTINF:-1, Шокирующее HD
-https://s.viks.tv/169/index.m3u8?k=1743684209p632i831i412i19Sf7419e56e116110960ae6d4f01d158bd
+https://s.viks.tv/169/index.m3u8?k=1743684649p632i831i412i19S3e7120fe4b35d299b897e0f7dbab6a96
+#EXTINF:-1, 1000
+https://s.viks.tv/137/index.m3u8?k=1743684645p632i831i412i19S935d2dc33bd245c2a4749aa365aefd10
+#EXTINF:-1, Hollywood
+https://s.viks.tv/586/index.m3u8?k=1743684646p632i831i412i19Sb3ddf44d77e0367c6aee9de34da4814b
+#EXTINF:-1, red
+https://s.viks.tv/576/index.m3u8?k=1743684697p632i831i412i19S1b7742a8dda554ceacf4028439cae82c
+#EXTINF:-1, 1000 Action
+https://s.viks.tv/138/index.m3u8?k=1743684683p632i831i412i19S6231a62b63b28b381f69cc60fff06877
+#EXTINF:-1, Кинокомедия
+https://s.viks.tv/129/index.m3u8?k=1743684686p632i831i412i19S2b7884ec34711abb7328ba00ed5d83f2
+#EXTINF:-1, TV XX
+https://s.viks.tv/133/index.m3u8?k=1743684725p632i831i412i19S462d9244b2f7627020fc73de74d933ba
+#EXTINF:-1, Amedia Premium HD
+https://s.viks.tv/193/index.m3u8?k=1743684718p632i831i412i19Sd00e752d34a01ccf654fe4ca7ad49625
+#EXTINF:-1, Иллюзион Плюс
+https://s.viks.tv/130/index.m3u8?k=1743684721p632i831i412i19S595bc2411476b68599acaa69b0569f60
