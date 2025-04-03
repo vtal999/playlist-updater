@@ -3,8 +3,12 @@ import re
 import os
 import base64
 from concurrent.futures import ThreadPoolExecutor
+import logging
 
-def get_video_url(channel_name, channel_url):
+# Настройка логирования
+logging.basicConfig(filename='playlist_update.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def get_video_url(channel_name, channel_url, existing_urls):
     try:
         print(f"Открываю: {channel_url}")
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"}
@@ -17,24 +21,44 @@ def get_video_url(channel_name, channel_url):
             video_src = match.group(1)
             # Убираем часть после &remote=
             video_src = video_src.split("&remote=")[0]
-            print(f"Найден поток для {channel_name}: {video_src}")
-            return channel_name, video_src
+            
+            if existing_urls.get(channel_name) != video_src:
+                print(f"Найден поток для {channel_name}: {video_src}")
+                return channel_name, video_src
+            else:
+                print(f"Для {channel_name} ссылка не изменилась.")
+                return None
         else:
-            print(f"Не удалось найти поток для {channel_name}.")
+            logging.error(f"Не удалось найти поток для {channel_name}.")
             return None
-    except Exception as e:
-        print(f"Ошибка при обработке {channel_name}: {e}")
+    except requests.exceptions.Timeout:
+        logging.error(f"Таймаут при подключении к {channel_name}.")
+        return None
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Ошибка при обработке {channel_name}: {e}")
         return None
 
-def update_playlist(video_urls):
+def update_playlist(video_urls, existing_urls):
     playlist_path = 'playlist.m3u'
     print(f"Обновляю плейлист: {playlist_path}")
     
+    updated = False
     with open(playlist_path, 'w', encoding='utf-8') as file:
         file.write("#EXTM3U\n")
-        for channel_name, video_url in video_urls.items():
+        for channel_name, video_url in existing_urls.items():
             file.write(f"#EXTINF:-1, {channel_name}\n{video_url}\n")
+        
+        # Обновляем только изменившиеся ссылки
+        for channel_name, video_url in video_urls.items():
+            if video_url:
+                file.write(f"#EXTINF:-1, {channel_name}\n{video_url}\n")
+                updated = True
     
+    if updated:
+        print("Плейлист обновлен.")
+    else:
+        print("Нет изменений в плейлисте.")
+
     repo_owner = "vtal999"
     repo_name = "playlist-updater"
     file_path = "playlist.m3u"
@@ -63,10 +87,21 @@ def main():
         "Страшное HD": "https://onlinetv.su/tv/kino/85-strashnoe-hd.html",
         "СТС": "https://onlinetv.su/tv/entertainment/224-sts.html",
     }
+    
+    # Считываем существующие ссылки из плейлиста
+    existing_urls = {}
+    if os.path.exists('playlist.m3u'):
+        with open('playlist.m3u', 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            for i in range(1, len(lines), 2):
+                channel_name = lines[i-1].strip().split(",")[1].strip()
+                video_url = lines[i].strip()
+                existing_urls[channel_name] = video_url
+
     video_urls = {}
     
     with ThreadPoolExecutor(max_workers=3) as executor:
-        results = executor.map(lambda item: get_video_url(*item), channels.items())
+        results = executor.map(lambda item: get_video_url(*item, existing_urls), channels.items())
     
     for result in results:
         if result:
@@ -74,7 +109,7 @@ def main():
             video_urls[channel_name] = video_url
     
     if video_urls:
-        update_playlist(video_urls)
+        update_playlist(video_urls, existing_urls)
 
 if __name__ == "__main__":
     main()
