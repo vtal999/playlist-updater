@@ -15,12 +15,10 @@ def get_video_url(channel_name, channel_url, existing_urls):
         response = requests.get(channel_url, headers=headers, timeout=15)
         response.raise_for_status()
         
-        # Ищем ссылку на поток
-        match = re.search(r'(https?://[^"]+\.(m3u8|mp4)[^"]*)', response.text)
-
+        match = re.search(r'<video[^>]*>\s*(?:<source[^>]+src=["\'](https?://[^"\']+\.(?:m3u8|mp4)[^"\']*)["\'][^>]*>\s*)*</video>|<video[^>]+src=["\'](https?://[^"\']+\.(?:m3u8|mp4)[^"\']*)["\']', response.text)
+        
         if match:
-            video_src = match.group(1)
-            # Убираем часть после &remote=
+            video_src = match.group(1) if match.group(1) else match.group(2)
             video_src = video_src.split("&remote=")[0]
             
             if existing_urls.get(channel_name) != video_src:
@@ -49,7 +47,6 @@ def update_playlist(video_urls, existing_urls):
         for channel_name, video_url in existing_urls.items():
             file.write(f"#EXTINF:-1, {channel_name}\n{video_url}\n")
         
-        # Обновляем только изменившиеся ссылки
         for channel_name, video_url in video_urls.items():
             if video_url:
                 file.write(f"#EXTINF:-1, {channel_name}\n{video_url}\n")
@@ -164,7 +161,6 @@ def main():
         "Канал Еда": "https://onlinetv.su/tv/entertainment/33-eda.html",
     }
     
-    # Считываем существующие ссылки из плейлиста
     existing_urls = {}
     if os.path.exists('playlist.m3u'):
         with open('playlist.m3u', 'r', encoding='utf-8') as file:
