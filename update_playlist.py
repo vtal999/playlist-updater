@@ -18,7 +18,7 @@ def init_driver():
     # Кешируем драйвер Chrome, чтобы не качать каждый раз
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(15)  # Таймаут загрузки страницы
+    driver.set_page_load_timeout(30)  # Таймаут загрузки страницы
     return driver
 
 # Функция для получения видео URL
