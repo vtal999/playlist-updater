@@ -1,39 +1,20 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 import requests
+import re
 import os
 import base64
 from concurrent.futures import ThreadPoolExecutor
-import time
-
-def init_driver():
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Запуск без интерфейса
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    driver_path = ChromeDriverManager().install()
-    driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(180)  # Уменьшено время ожидания загрузки
-    return driver
 
 def get_video_url(channel_name, channel_url):
-    driver = init_driver()
     try:
         print(f"Открываю: {channel_url}")
-        driver.get(channel_url)
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"}
+        response = requests.get(channel_url, headers=headers, timeout=15)
+        response.raise_for_status()
         
-        WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.TAG_NAME, "video")))
-        video_tag = driver.find_element(By.TAG_NAME, "video")
-        source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
-        video_src = source_tag[0].get_attribute('src') if source_tag else video_tag.get_attribute('src')
-        
-        if video_src:
-            video_src = video_src.split("&remote=")[0]
+        # Ищем ссылку на поток
+        match = re.search(r'(https?://[^"]+\.m3u8[^"]*)', response.text)
+        if match:
+            video_src = match.group(1)
             print(f"Найден поток для {channel_name}: {video_src}")
             return channel_name, video_src
         else:
@@ -42,8 +23,6 @@ def get_video_url(channel_name, channel_url):
     except Exception as e:
         print(f"Ошибка при обработке {channel_name}: {e}")
         return None
-    finally:
-        driver.quit()
 
 def update_playlist(video_urls):
     playlist_path = 'playlist.m3u'
@@ -97,6 +76,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
