@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
@@ -10,15 +12,14 @@ from concurrent.futures import ThreadPoolExecutor
 # Функция для инициализации драйвера
 def init_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Запуск без GUI
+    options.add_argument("--headless=new")  # Обновленный headless-режим
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    # Кешируем драйвер Chrome, чтобы не качать каждый раз
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(30)  # Таймаут загрузки страницы
+    driver.set_page_load_timeout(30)
     return driver
 
 # Функция для получения видео URL
@@ -27,20 +28,24 @@ def get_video_url(channel_name, channel_url):
     try:
         print(f"Открываю: {channel_url}")
         driver.get(channel_url)
-        driver.implicitly_wait(10)  # Уменьшаем ожидание
 
         # Проверяем, загрузилась ли страница
         if driver.execute_script("return document.readyState") != "complete":
             print(f"Страница {channel_url} загружается слишком долго...")
             return None
 
-        # Поиск <video>
-        video_tag = driver.find_element(By.TAG_NAME, 'video')
-        video_src = None
+        # Ждем появления <video>
+        wait = WebDriverWait(driver, 15)
+        try:
+            video_tag = wait.until(EC.presence_of_element_located((By.TAG_NAME, "video")))
+        except Exception:
+            print(f"Видео тег не найден на {channel_url}")
+            print(driver.page_source[:500])  # Логируем первые 500 символов HTML
+            return None
 
-        if video_tag:
-            source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
-            video_src = source_tag[0].get_attribute('src') if source_tag else video_tag.get_attribute('src')
+        # Поиск источника видео
+        source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
+        video_src = source_tag[0].get_attribute('src') if source_tag else video_tag.get_attribute('src')
 
         if video_src:
             video_src = video_src.split("&remote=")[0]  # Убираем IP
@@ -97,13 +102,12 @@ def main():
         "Сапфир": "https://onlinetv.su/tv/kino/262-sapfir.html#google_vignette",
         "2+2": "http://ip.viks.tv/114427-22-tv.html",
         "СТБ": "http://ip.viks.tv/032117-stb.html",
-
     }
 
     video_urls = {}
 
     # Запускаем в несколько потоков
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers=os.cpu_count() or 4) as executor:
         results = executor.map(lambda item: get_video_url(*item), channels.items())
 
     for result in results:
@@ -116,6 +120,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
