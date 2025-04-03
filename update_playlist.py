@@ -5,38 +5,73 @@ from webdriver_manager.chrome import ChromeDriverManager
 import requests
 import os
 import base64
+from concurrent.futures import ThreadPoolExecutor
 
 # Функция для инициализации драйвера
 def init_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Открывать браузер в фоновом режиме (без интерфейса)
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    options.add_argument("--headless")  # Запуск без GUI
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    # Кешируем драйвер Chrome, чтобы не качать каждый раз
+    driver_path = ChromeDriverManager().install()
+    driver = webdriver.Chrome(service=Service(driver_path), options=options)
+    driver.set_page_load_timeout(15)  # Таймаут загрузки страницы
     return driver
+
+# Функция для получения видео URL
+def get_video_url(channel_name, channel_url):
+    driver = init_driver()
+    try:
+        print(f"Открываю: {channel_url}")
+        driver.get(channel_url)
+        driver.implicitly_wait(10)  # Уменьшаем ожидание
+
+        # Проверяем, загрузилась ли страница
+        if driver.execute_script("return document.readyState") != "complete":
+            print(f"Страница {channel_url} загружается слишком долго...")
+            return None
+
+        # Поиск <video>
+        video_tag = driver.find_element(By.TAG_NAME, 'video')
+        video_src = None
+
+        if video_tag:
+            source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
+            video_src = source_tag[0].get_attribute('src') if source_tag else video_tag.get_attribute('src')
+
+        if video_src:
+            video_src = video_src.split("&remote=")[0]  # Убираем IP
+            print(f"Найден поток для {channel_name}: {video_src}")
+            return channel_name, video_src
+        else:
+            print(f"Не удалось найти поток для {channel_name}.")
+            return None
+    except Exception as e:
+        print(f"Ошибка при обработке {channel_name}: {e}")
+        return None
+    finally:
+        driver.quit()
 
 # Функция для обновления плейлиста
 def update_playlist(video_urls):
     playlist_path = 'playlist.m3u'
-    print(f"Updating playlist at: {playlist_path}")
+    print(f"Обновляю плейлист: {playlist_path}")
 
-    # Обновляем плейлист для каждого канала
     with open(playlist_path, 'w', encoding='utf-8') as file:
         file.write("#EXTM3U\n")
         for channel_name, video_url in video_urls.items():
             file.write(f"#EXTINF:-1, {channel_name}\n{video_url}\n")
 
-    # Выводим содержимое файла для проверки
-    with open(playlist_path, 'r', encoding='utf-8') as file:
-        playlist_content = file.read()
-        print("Содержимое файла playlist.m3u после обновления:")
-        print(playlist_content)
-
-    # === Обновление файла через GitHub API ===
+    # GitHub API для обновления файла
     repo_owner = "vtal999"
     repo_name = "playlist-updater"
     file_path = "playlist.m3u"
     branch = "main"
-
     github_token = os.getenv("GITHUB_TOKEN")
+
     if not github_token:
         raise EnvironmentError("Ошибка: GITHUB_TOKEN не найден в переменных окружения.")
 
@@ -44,91 +79,48 @@ def update_playlist(video_urls):
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path}"
 
     response = requests.get(url, headers=headers)
-    sha = ""
-    if response.status_code == 200:
-        file_data = response.json()
-        sha = file_data.get("sha", "")
-    elif response.status_code != 404:
-        raise Exception(f"Ошибка при получении информации о файле: {response.text}")
+    sha = response.json().get("sha", "") if response.status_code == 200 else ""
 
-    # Кодируем содержимое плейлиста в base64
-    encoded_content = base64.b64encode(playlist_content.encode('utf-8')).decode('utf-8')
+    encoded_content = base64.b64encode(open(playlist_path, 'rb').read()).decode('utf-8')
 
-    data = {
-        "message": "Update playlist with new tokens",
-        "content": encoded_content,
-        "sha": sha,
-        "branch": branch
-    }
-
+    data = {"message": "Автообновление плейлиста", "content": encoded_content, "sha": sha, "branch": branch}
     response = requests.put(url, headers=headers, json=data)
 
     if response.status_code in [200, 201]:
-        print("Файл успешно обновлен через GitHub API.")
+        print("Файл успешно обновлен в GitHub.")
     else:
-        raise Exception(f"Ошибка при обновлении через API: {response.text}")
+        raise Exception(f"Ошибка обновления через API: {response.text}")
 
-# Функция для получения видео URL с проверкой на <source>
-def get_video_url(driver, channel_url):
-    driver.get(channel_url)
-    driver.implicitly_wait(30)
-
-    # Находим тег <video> и проверяем наличие внутри него <source>
-    video_tag = driver.find_element(By.TAG_NAME, 'video')
-    if video_tag:
-        # Проверяем наличие тега <source> внутри тега <video>
-        source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
-        if source_tag:
-            # Если <source> найден, берем src из него
-            video_src = source_tag[0].get_attribute('src') if source_tag else None
-        else:
-            # Если <source> нет, берем src из самого тега <video>
-            video_src = video_tag.get_attribute('src')
-        
-        if video_src:
-            # Убираем &remote=91.214.138.236 из ссылки, если оно есть
-            video_src = video_src.split("&remote=")[0]
-            print(f"Video URL для {channel_url}: {video_src}")
-            return video_src
-    else:
-        print(f"Не удалось найти тег <video> на странице {channel_url}.")
-    return None
-
+# Основная функция
 def main():
-    driver = init_driver()
+    channels = {
+        "Сапфир": "https://onlinetv.su/tv/kino/262-sapfir.html#google_vignette",
+        "2+2": "http://ip.viks.tv/114427-22-tv.html",
+        "СТБ": "http://ip.viks.tv/032117-stb.html",
+        "Первый канал": "http://ip.viks.tv/021612-pervyy-kanal.html",
+        "Россия 1": "http://ip.viks.tv/031327-rossiya1_tv.html",
+        "Россия 24": "http://ip.viks.tv/126307-rossiya_24_tv.html",
+        "НСТ": "http://ip.viks.tv/394-nst_4.html",
+        "Кинохит": "http://ip.viks.tv/477-kinohit_14.htm",
+    }
 
-    try:
-        # Список каналов и их URL
-        channels = {
-            "Сапфир": "https://onlinetv.su/tv/kino/262-sapfir.html#google_vignette",
-            "2+2": "http://ip.viks.tv/114427-22-tv.html",
-            "СТБ": "http://ip.viks.tv/032117-stb.html",
-            "Первый канал": "http://ip.viks.tv/021612-pervyy-kanal.html",
-            "Россия 1": "http://ip.viks.tv/031327-rossiya1_tv.html",
-            "Россия 24": "http://ip.viks.tv/126307-rossiya_24_tv.html",
-            "НСТ": "http://ip.viks.tv/394-nst_4.html",
-            "Кинохит": "http://ip.viks.tv/477-kinohit_14.htm",
-            # Добавьте другие каналы по аналогии
-        }
+    video_urls = {}
 
-        video_urls = {}
+    # Запускаем в несколько потоков
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        results = executor.map(lambda item: get_video_url(*item), channels.items())
 
-        for channel_name, channel_url in channels.items():
-            video_url = get_video_url(driver, channel_url)
-            if video_url:
-                video_urls[channel_name] = video_url
+    for result in results:
+        if result:
+            channel_name, video_url = result
+            video_urls[channel_name] = video_url
 
-        if video_urls:
-            update_playlist(video_urls)
-
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-
-    finally:
-        driver.quit()
+    if video_urls:
+        update_playlist(video_urls)
 
 if __name__ == "__main__":
     main()
+
 
 
 
