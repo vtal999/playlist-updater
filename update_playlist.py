@@ -20,7 +20,7 @@ def init_driver():
 
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(120)  # Увеличиваем таймаут до 120 секунд
+    driver.set_page_load_timeout(60)  # Таймаут на загрузку страницы
     return driver
 
 # Функция для получения видео URL
@@ -30,37 +30,37 @@ def get_video_url(channel_name, channel_url):
         print(f"Открываю: {channel_url}")
         driver.get(channel_url)
 
-        # Даем время странице прогрузиться
-        time.sleep(10)  # 10 секунд пауза перед дальнейшими действиями
+        # Даем немного времени странице на полную загрузку
+        time.sleep(10)
 
-        # Проверяем, загрузилась ли страница
-        if driver.execute_script("return document.readyState") != "complete":
-            print(f"Страница {channel_url} загружается слишком долго...")
+        # Проверяем состояние страницы
+        state = driver.execute_script("return document.readyState")
+        if state != "complete":
+            print(f"Страница не загружена полностью: {state}")
             return None
 
-        # Ждем появления <video>
-        wait = WebDriverWait(driver, 30)  # Увеличиваем время ожидания до 30 секунд
+        # Выводим HTML для диагностики, если видео не найдено
+        video_tag = None
         try:
-            video_tag = wait.until(EC.presence_of_element_located((By.TAG_NAME, "video")))
-        except Exception:
-            print(f"Видео тег не найден на {channel_url}")
+            video_tag = driver.find_element(By.TAG_NAME, "video")
+        except Exception as e:
+            print(f"Ошибка при поиске видео тега: {e}")
             print(driver.page_source[:500])  # Логируем первые 500 символов HTML
-            return None
 
-        # Поиск источника видео
-        source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
-        video_src = source_tag[0].get_attribute('src') if source_tag else video_tag.get_attribute('src')
+        if video_tag:
+            source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
+            video_src = source_tag[0].get_attribute('src') if source_tag else video_tag.get_attribute('src')
 
-        if video_src:
-            video_src = video_src.split("&remote=")[0]  # Убираем IP
-            print(f"Найден поток для {channel_name}: {video_src}")
-            return channel_name, video_src
+            if video_src:
+                video_src = video_src.split("&remote=")[0]  # Убираем IP
+                print(f"Найден поток для {channel_name}: {video_src}")
+                return channel_name, video_src
+            else:
+                print(f"Не удалось найти поток для {channel_name}.")
         else:
-            print(f"Не удалось найти поток для {channel_name}.")
-            return None
+            print(f"Не найден тег <video> на {channel_url}")
     except Exception as e:
         print(f"Ошибка при обработке {channel_name}: {e}")
-        return None
     finally:
         driver.quit()
 
