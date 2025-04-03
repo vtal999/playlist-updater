@@ -13,14 +13,14 @@ import time
 # Функция для инициализации драйвера
 def init_driver():
     options = webdriver.ChromeOptions()
-    # options.add_argument("--headless=new")  # ОТКЛЮЧИЛ headless для теста
+    options.add_argument("--headless=new")  # Обновленный headless-режим
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
     driver_path = ChromeDriverManager().install()
     driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    driver.set_page_load_timeout(60)  # Увеличил таймаут
+    driver.set_page_load_timeout(120)  # Увеличиваем таймаут до 120 секунд
     return driver
 
 # Функция для получения видео URL
@@ -29,13 +29,17 @@ def get_video_url(channel_name, channel_url):
     try:
         print(f"Открываю: {channel_url}")
         driver.get(channel_url)
-        time.sleep(5)  # Даем странице загрузиться
 
+        # Даем время странице прогрузиться
+        time.sleep(10)  # 10 секунд пауза перед дальнейшими действиями
+
+        # Проверяем, загрузилась ли страница
         if driver.execute_script("return document.readyState") != "complete":
             print(f"Страница {channel_url} загружается слишком долго...")
             return None
 
-        wait = WebDriverWait(driver, 20)
+        # Ждем появления <video>
+        wait = WebDriverWait(driver, 30)  # Увеличиваем время ожидания до 30 секунд
         try:
             video_tag = wait.until(EC.presence_of_element_located((By.TAG_NAME, "video")))
         except Exception:
@@ -43,11 +47,12 @@ def get_video_url(channel_name, channel_url):
             print(driver.page_source[:500])  # Логируем первые 500 символов HTML
             return None
 
+        # Поиск источника видео
         source_tag = video_tag.find_elements(By.TAG_NAME, 'source')
         video_src = source_tag[0].get_attribute('src') if source_tag else video_tag.get_attribute('src')
 
         if video_src:
-            video_src = video_src.split("&remote=")[0]
+            video_src = video_src.split("&remote=")[0]  # Убираем IP
             print(f"Найден поток для {channel_name}: {video_src}")
             return channel_name, video_src
         else:
@@ -69,6 +74,7 @@ def update_playlist(video_urls):
         for channel_name, video_url in video_urls.items():
             file.write(f"#EXTINF:-1, {channel_name}\n{video_url}\n")
 
+    # GitHub API для обновления файла
     repo_owner = "vtal999"
     repo_name = "playlist-updater"
     file_path = "playlist.m3u"
@@ -102,6 +108,7 @@ def main():
 
     video_urls = {}
 
+    # Запускаем в несколько потоков
     with ThreadPoolExecutor(max_workers=os.cpu_count() or 4) as executor:
         results = executor.map(lambda item: get_video_url(*item), channels.items())
 
@@ -115,6 +122,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
